@@ -1,7 +1,5 @@
 package me.veloc1.timetracker.data.actions.base;
 
-import me.veloc1.timetracker.data.actions.base.Action;
-
 public class DummyAction implements Action<String> {
   private String result;
 
