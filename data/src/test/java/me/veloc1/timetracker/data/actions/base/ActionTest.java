@@ -1,6 +1,5 @@
 package me.veloc1.timetracker.data.actions.base;
 
-import me.veloc1.timetracker.data.actions.SingleThreadActionExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 

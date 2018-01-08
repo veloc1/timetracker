@@ -1,8 +1,8 @@
 package me.veloc1.timetracker.data.types;
 
 public class TagToActivity {
-  private int tagId;
-  private int activityId;
+  private final int tagId;
+  private final int activityId;
 
   public TagToActivity(int tagId, int activityId) {
     this.tagId = tagId;

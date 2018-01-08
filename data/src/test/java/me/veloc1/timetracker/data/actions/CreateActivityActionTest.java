@@ -1,5 +1,7 @@
 package me.veloc1.timetracker.data.actions;
 
+import me.veloc1.timetracker.data.TimeProvider;
+import me.veloc1.timetracker.data.actions.base.BaseActionTest;
 import me.veloc1.timetracker.data.repository.ActivitiesRepository;
 import me.veloc1.timetracker.data.repository.TagToActivityRepository;
 import me.veloc1.timetracker.data.repository.TagsRepository;
@@ -29,6 +31,8 @@ public class CreateActivityActionTest extends BaseActionTest {
     ActivitiesRepository repository = mockActivitiesRepository();
     action.setActivitiesRepository(repository);
 
+    action.setTimeProvider(new TimeProvider());
+
     Date     timeBeforeExecute = Calendar.getInstance().getTime();
     Activity result            = execute(action);
     Date     timeAfterExecute  = Calendar.getInstance().getTime();
@@ -38,11 +42,11 @@ public class CreateActivityActionTest extends BaseActionTest {
     Assert.assertEquals(description, result.getDescription());
 
     Assert.assertTrue(
-        result.getCreatedAt().getTime() >= timeBeforeExecute.getTime()
-        && result.getCreatedAt().getTime() <= timeAfterExecute.getTime());
+        result.getCreatedAt() >= timeBeforeExecute.getTime()
+        && result.getCreatedAt() <= timeAfterExecute.getTime());
     Assert.assertTrue(
-        result.getUpdatedAt().getTime() >= timeBeforeExecute.getTime()
-        && result.getUpdatedAt().getTime() <= timeAfterExecute.getTime());
+        result.getUpdatedAt() >= timeBeforeExecute.getTime()
+        && result.getUpdatedAt() <= timeAfterExecute.getTime());
 
     ArgumentCaptor<Activity> captor = ArgumentCaptor.forClass(Activity.class);
     Mockito.verify(repository).add(captor.capture());
@@ -63,6 +67,8 @@ public class CreateActivityActionTest extends BaseActionTest {
     ActivitiesRepository repository = mockActivitiesRepository();
     action.setActivitiesRepository(repository);
 
+    action.setTimeProvider(new TimeProvider());
+
     execute(action); //this line should throw
 
     Mockito.verifyNoMoreInteractions(repository);
@@ -82,6 +88,8 @@ public class CreateActivityActionTest extends BaseActionTest {
     ActivitiesRepository activitiesRepository = mockActivitiesRepository();
     action.setActivitiesRepository(activitiesRepository);
 
+    action.setTimeProvider(new TimeProvider());
+
     TagsRepository tagsRepository = mockTagsRepository();
     action.setTagsRepository(tagsRepository);
 
@@ -97,11 +105,11 @@ public class CreateActivityActionTest extends BaseActionTest {
     Assert.assertEquals(description, result.getDescription());
 
     Assert.assertTrue(
-        result.getCreatedAt().getTime() >= timeBeforeExecute.getTime()
-        && result.getCreatedAt().getTime() <= timeAfterExecute.getTime());
+        result.getCreatedAt() >= timeBeforeExecute.getTime()
+        && result.getCreatedAt() <= timeAfterExecute.getTime());
     Assert.assertTrue(
-        result.getUpdatedAt().getTime() >= timeBeforeExecute.getTime()
-        && result.getUpdatedAt().getTime() <= timeAfterExecute.getTime());
+        result.getUpdatedAt() >= timeBeforeExecute.getTime()
+        && result.getUpdatedAt() <= timeAfterExecute.getTime());
 
     ArgumentCaptor<Activity> captor = ArgumentCaptor.forClass(Activity.class);
     Mockito.verify(activitiesRepository).add(captor.capture());
@@ -145,7 +153,7 @@ public class CreateActivityActionTest extends BaseActionTest {
         .will(new Answer<Activity>() {
 
           @Override
-          public Activity answer(InvocationOnMock invocation) throws Throwable {
+          public Activity answer(InvocationOnMock invocation) {
             Activity activityToCreate = invocation.getArgument(0);
 
             if (activityToCreate.getTitle() == null) {
@@ -172,7 +180,7 @@ public class CreateActivityActionTest extends BaseActionTest {
         .will(new Answer<Tag>() {
 
           @Override
-          public Tag answer(InvocationOnMock invocation) throws Throwable {
+          public Tag answer(InvocationOnMock invocation) {
             if (invocation.getArguments()[0].equals("tag, already created")) {
               return new Tag(125, (String) invocation.getArguments()[0]);
             } else {
@@ -186,7 +194,7 @@ public class CreateActivityActionTest extends BaseActionTest {
         .will(new Answer<Tag>() {
 
           @Override
-          public Tag answer(InvocationOnMock invocation) throws Throwable {
+          public Tag answer(InvocationOnMock invocation) {
             return new Tag(1, ((Tag) invocation.getArguments()[0]).getTitle());
           }
         });
@@ -194,7 +202,6 @@ public class CreateActivityActionTest extends BaseActionTest {
   }
 
   private TagToActivityRepository mockTagToActivityRepository() {
-    TagToActivityRepository repository = Mockito.mock(TagToActivityRepository.class);
-    return repository;
+    return Mockito.mock(TagToActivityRepository.class);
   }
 }

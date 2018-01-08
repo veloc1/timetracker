@@ -1,4 +1,4 @@
-package me.veloc1.timetracker.data.actions;
+package me.veloc1.timetracker.data.actions.base;
 
 import me.veloc1.timetracker.data.actions.base.Action;
 import me.veloc1.timetracker.data.actions.base.ActionExecutor;

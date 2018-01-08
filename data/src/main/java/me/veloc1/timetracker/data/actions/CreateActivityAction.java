@@ -1,5 +1,6 @@
 package me.veloc1.timetracker.data.actions;
 
+import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.Action;
 import me.veloc1.timetracker.data.annotations.Nullable;
 import me.veloc1.timetracker.data.repository.ActivitiesRepository;
@@ -26,6 +27,7 @@ public class CreateActivityAction implements Action<Activity> {
   private ActivitiesRepository    activitiesRepository;
   private TagsRepository          tagsRepository;
   private TagToActivityRepository tagToActivityRepository;
+  private TimeProvider            timeProvider;
 
   public CreateActivityAction(String title, String description, @Nullable String[] tags) {
     this.title = title;
@@ -35,7 +37,14 @@ public class CreateActivityAction implements Action<Activity> {
 
   @Override
   public void execute() {
-    result = activitiesRepository.add(new Activity(-1, title, description));
+    Activity toCreate =
+        new Activity(
+            -1,
+            title,
+            description,
+            timeProvider.getCurrentTimeInMillis(),
+            timeProvider.getCurrentTimeInMillis());
+    result = activitiesRepository.add(toCreate);
 
     Tag[] tagsObjects = collectTagsFromStringArray(tags);
     bindTagsToActivity(tagsObjects, result);
@@ -82,5 +91,10 @@ public class CreateActivityAction implements Action<Activity> {
   @Inject
   public void setTagToActivityRepository(TagToActivityRepository tagToActivityRepository) {
     this.tagToActivityRepository = tagToActivityRepository;
+  }
+
+  @Inject
+  public void setTimeProvider(TimeProvider timeProvider) {
+    this.timeProvider = timeProvider;
   }
 }

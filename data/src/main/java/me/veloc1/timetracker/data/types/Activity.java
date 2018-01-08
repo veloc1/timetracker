@@ -1,24 +1,13 @@
 package me.veloc1.timetracker.data.types;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class Activity {
   private final int    id;
   private final String title;
   private final String description;
-  private final Date   createdAt;
-  private final Date   updatedAt;
+  private final long   createdAt;
+  private final long   updatedAt;
 
-  public Activity(int id, String title, String description) {
-    this(id,
-         title,
-         description,
-         Calendar.getInstance().getTime(),
-         Calendar.getInstance().getTime());
-  }
-
-  public Activity(int id, String title, String description, Date createdAt, Date updatedAt) {
+  public Activity(int id, String title, String description, long createdAt, long updatedAt) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -38,11 +27,11 @@ public class Activity {
     return description;
   }
 
-  public Date getCreatedAt() {
+  public long getCreatedAt() {
     return createdAt;
   }
 
-  public Date getUpdatedAt() {
+  public long getUpdatedAt() {
     return updatedAt;
   }
 }
