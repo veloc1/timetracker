@@ -11,18 +11,15 @@ import me.veloc1.timetracker.data.types.Tag;
 import me.veloc1.timetracker.data.types.TagToActivity;
 
 import javax.inject.Inject;
+import java.util.List;
 
-/**
- * Creates an activity with given fields and bind newly created activity to given tags.
- */
-public class CreateActivityAction implements Action<Activity> {
+public class EditActivityAction implements Action<Void> {
 
-  private final String   title;
-  private final String   description;
+  private final int      activityId;
+  private final String   newTitle;
+  private final String   newDescription;
   @Nullable
-  private final String[] tags;
-
-  private Activity result;
+  private final String[] newTags;
 
   @Inject
   private ActivitiesRepository    activitiesRepository;
@@ -33,25 +30,28 @@ public class CreateActivityAction implements Action<Activity> {
   @Inject
   private TimeProvider            timeProvider;
 
-  public CreateActivityAction(String title, String description, @Nullable String[] tags) {
-    this.title = title;
-    this.description = description;
-    this.tags = tags;
+  public EditActivityAction(int activityId, String newTitle, String newDescription, String[] tags) {
+    this.activityId = activityId;
+    this.newTitle = newTitle;
+    this.newDescription = newDescription;
+    newTags = tags;
   }
 
   @Override
   public void execute() {
-    Activity toCreate =
-        new Activity(
-            -1,
-            title,
-            description,
-            timeProvider.getCurrentTimeInMillis(),
-            timeProvider.getCurrentTimeInMillis());
-    result = activitiesRepository.add(toCreate);
+    Activity activity = activitiesRepository.getById(activityId);
 
-    Tag[] tagsObjects = collectTagsFromStringArray(tags);
-    bindTagsToActivity(tagsObjects, result);
+    activitiesRepository.update(
+        new Activity(
+            activityId,
+            newTitle,
+            newDescription,
+            activity.getCreatedAt(),
+            timeProvider.getCurrentTimeInMillis()));
+
+    Tag[]     tagsObjects = collectTagsFromStringArray(newTags);
+    List<Tag> oldTags     = tagsRepository.findByActivity(activityId);
+    bindTagsToActivity(oldTags.toArray(new Tag[oldTags.size()]), tagsObjects, activityId);
   }
 
   private Tag[] collectTagsFromStringArray(String[] tags) {
@@ -71,15 +71,19 @@ public class CreateActivityAction implements Action<Activity> {
     return tagsObjects;
   }
 
-  private void bindTagsToActivity(Tag[] tags, Activity activity) {
+  private void bindTagsToActivity(Tag[] oldTags, Tag[] tags, int activityId) {
+    for (final Tag tag : oldTags) {
+      tagToActivityRepository.removeTagFromActivity(tag.getId(), activityId);
+    }
+
     for (final Tag tag : tags) {
-      tagToActivityRepository.add(new TagToActivity(tag.getId(), activity.getId()));
+      tagToActivityRepository.add(new TagToActivity(tag.getId(), activityId));
     }
   }
 
   @Override
-  public Activity getResult() {
-    return result;
+  public Void getResult() {
+    return null;
   }
 
   public void setActivitiesRepository(ActivitiesRepository activitiesRepository) {

@@ -1,6 +1,8 @@
-package me.veloc1.timetracker.data.repository;
+package me.veloc1.timetracker.data.repositories;
 
 import me.veloc1.timetracker.data.types.Tag;
+
+import java.util.List;
 
 public interface TagsRepository extends Repository<Tag> {
   /**
@@ -10,4 +12,5 @@ public interface TagsRepository extends Repository<Tag> {
    * @return tag object or null
    */
   Tag find(String tag);
+  List<Tag> findByActivity(int activityId);
 }

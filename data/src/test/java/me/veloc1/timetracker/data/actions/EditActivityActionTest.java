@@ -17,46 +17,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
-public class CreateActivityActionTest extends BaseActionTest {
-
-  @Test
-  public void createActivityWithoutTags() throws Throwable {
-    String title       = "title";
-    String description = "test description";
-
-    CreateActivityAction action = new CreateActivityAction(title, description, null);
-
-    ActivitiesRepository repository = initActivitiesRepository(action);
-
-    action.setTimeProvider(new TimeProvider());
-
-    Date     timeBeforeExecute = Calendar.getInstance().getTime();
-    Activity result            = execute(action);
-    Date     timeAfterExecute  = Calendar.getInstance().getTime();
-
-    verifyReturnedActivity(title, description, result, timeBeforeExecute, timeAfterExecute);
-    verifyAddInvocation(repository, result);
-
-    Mockito.verifyNoMoreInteractions(repository);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void createActivityWithError() throws Throwable {
-    CreateActivityAction action = new CreateActivityAction(null, null, null);
-
-    ActivitiesRepository repository = initActivitiesRepository(action);
-
-    action.setTimeProvider(new TimeProvider());
-
-    execute(action); //this line should throw
-
-    Mockito.verifyNoMoreInteractions(repository);
-  }
+public class EditActivityActionTest extends BaseActionTest {
 
   @Test
-  public void createActivityWithTags() throws Throwable {
+  public void editActivityWithTags() throws Throwable {
     String title       = "title";
     String description = "test description";
 
@@ -64,7 +32,7 @@ public class CreateActivityActionTest extends BaseActionTest {
     String   tag2 = "not created";
     String[] tags = new String[]{tag1, tag2};
 
-    CreateActivityAction action = new CreateActivityAction(title, description, tags);
+    EditActivityAction action = new EditActivityAction(1, title, description, tags);
 
     ActivitiesRepository    activitiesRepository    = initActivitiesRepository(action);
     TagsRepository          tagsRepository          = initTagsRepository(action);
@@ -72,65 +40,61 @@ public class CreateActivityActionTest extends BaseActionTest {
 
     action.setTimeProvider(new TimeProvider());
 
-    Date     timeBeforeExecute = Calendar.getInstance().getTime();
-    Activity result            = execute(action);
-    Date     timeAfterExecute  = Calendar.getInstance().getTime();
+    Date timeBeforeExecute = Calendar.getInstance().getTime();
+    execute(action);
+    Date timeAfterExecute = Calendar.getInstance().getTime();
 
-    verifyReturnedActivity(title, description, result, timeBeforeExecute, timeAfterExecute);
+    Mockito.verify(activitiesRepository).getById(1);
 
-    verifyAddInvocation(activitiesRepository, result);
+    verifyUpdateActivityInvocation(
+        title,
+        description,
+        activitiesRepository,
+        timeBeforeExecute,
+        timeAfterExecute);
+
+    Mockito.verify(tagsRepository).findByActivity(1);
 
     verifyTags(tag1, tag2, tags, tagsRepository, tagToActivityRepository);
 
     Mockito.verifyNoMoreInteractions(activitiesRepository, tagsRepository, tagToActivityRepository);
   }
 
-  private ActivitiesRepository initActivitiesRepository(CreateActivityAction action) {
-    ActivitiesRepository repository = mockActivitiesRepository();
-    action.setActivitiesRepository(repository);
-    return repository;
+  private ActivitiesRepository initActivitiesRepository(EditActivityAction action) {
+    ActivitiesRepository activitiesRepository = mockActivitiesRepository();
+    action.setActivitiesRepository(activitiesRepository);
+    return activitiesRepository;
   }
 
-  private TagsRepository initTagsRepository(CreateActivityAction action) {
+  private TagsRepository initTagsRepository(EditActivityAction action) {
     TagsRepository tagsRepository = mockTagsRepository();
     action.setTagsRepository(tagsRepository);
     return tagsRepository;
   }
 
-  private TagToActivityRepository initTagToActivityRepository(CreateActivityAction action) {
+  private TagToActivityRepository initTagToActivityRepository(EditActivityAction action) {
     TagToActivityRepository tagToActivityRepository = mockTagToActivityRepository();
     action.setTagToActivityRepository(tagToActivityRepository);
     return tagToActivityRepository;
   }
 
-  private void verifyReturnedActivity(
+  private void verifyUpdateActivityInvocation(
       String title,
       String description,
-      Activity result,
+      ActivitiesRepository activitiesRepository,
       Date timeBeforeExecute,
       Date timeAfterExecute) {
 
-    Assert.assertEquals(1, result.getId());
-    Assert.assertEquals(title, result.getTitle());
-    Assert.assertEquals(description, result.getDescription());
-
-    Assert.assertTrue(
-        result.getCreatedAt() >= timeBeforeExecute.getTime()
-        && result.getCreatedAt() <= timeAfterExecute.getTime());
-    Assert.assertTrue(
-        result.getUpdatedAt() >= timeBeforeExecute.getTime()
-        && result.getUpdatedAt() <= timeAfterExecute.getTime());
-  }
-
-  private void verifyAddInvocation(ActivitiesRepository repository, Activity result) {
     ArgumentCaptor<Activity> captor = ArgumentCaptor.forClass(Activity.class);
-    Mockito.verify(repository).add(captor.capture());
+    Mockito.verify(activitiesRepository).update(captor.capture());
 
-    Assert.assertEquals(-1, captor.getValue().getId());
-    Assert.assertEquals(result.getTitle(), captor.getValue().getTitle());
-    Assert.assertEquals(result.getDescription(), captor.getValue().getDescription());
-    Assert.assertEquals(result.getCreatedAt(), captor.getValue().getCreatedAt());
-    Assert.assertEquals(result.getUpdatedAt(), captor.getValue().getUpdatedAt());
+    Assert.assertEquals(1, captor.getValue().getId());
+    Assert.assertEquals(title, captor.getValue().getTitle());
+    Assert.assertEquals(description, captor.getValue().getDescription());
+    Assert.assertEquals(100L, captor.getValue().getCreatedAt());
+    Assert.assertTrue(
+        captor.getValue().getUpdatedAt() >= timeBeforeExecute.getTime()
+        && captor.getValue().getUpdatedAt() <= timeAfterExecute.getTime());
   }
 
   private void verifyTags(
@@ -147,8 +111,11 @@ public class CreateActivityActionTest extends BaseActionTest {
     Mockito.verify(tagsRepository).add(tagCaptor.capture());
     Assert.assertEquals(tag2, tagCaptor.getValue().getTitle());
 
+    Mockito.verify(tagToActivityRepository).removeTagFromActivity(126, 1);
+
     ArgumentCaptor<TagToActivity> tagToActivityCaptor
         = ArgumentCaptor.forClass(TagToActivity.class);
+
     Mockito
         .verify(tagToActivityRepository, Mockito.times(tags.length))
         .add(tagToActivityCaptor.capture());
@@ -166,8 +133,26 @@ public class CreateActivityActionTest extends BaseActionTest {
 
   private ActivitiesRepository mockActivitiesRepository() {
     ActivitiesRepository repository = Mockito.mock(ActivitiesRepository.class);
+
     BDDMockito
-        .given(repository.add(Mockito.any(Activity.class)))
+        .given(repository.getById(1))
+        .will(new Answer<Activity>() {
+
+          @Override
+          public Activity answer(InvocationOnMock invocation) {
+            Activity result =
+                new Activity(
+                    (Integer) invocation.getArguments()[0],
+                    "",
+                    "",
+                    100L,
+                    200L);
+            return result;
+          }
+        });
+
+    BDDMockito
+        .given(repository.update(Mockito.any(Activity.class)))
         .will(new Answer<Activity>() {
 
           @Override
@@ -193,6 +178,7 @@ public class CreateActivityActionTest extends BaseActionTest {
 
   private TagsRepository mockTagsRepository() {
     TagsRepository repository = Mockito.mock(TagsRepository.class);
+
     BDDMockito
         .given(repository.find(Mockito.anyString()))
         .will(new Answer<Tag>() {
@@ -208,6 +194,16 @@ public class CreateActivityActionTest extends BaseActionTest {
         });
 
     BDDMockito
+        .given(repository.findByActivity(1))
+        .will(new Answer<List<Tag>>() {
+
+          @Override
+          public List<Tag> answer(InvocationOnMock invocation) {
+            return Collections.singletonList(new Tag(126, ""));
+          }
+        });
+
+    BDDMockito
         .given(repository.add(Mockito.any(Tag.class)))
         .will(new Answer<Tag>() {
 
@@ -216,6 +212,7 @@ public class CreateActivityActionTest extends BaseActionTest {
             return new Tag(1, ((Tag) invocation.getArguments()[0]).getTitle());
           }
         });
+
     return repository;
   }
 

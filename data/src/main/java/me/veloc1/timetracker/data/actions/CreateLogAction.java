@@ -3,7 +3,9 @@ package me.veloc1.timetracker.data.actions;
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.Action;
 import me.veloc1.timetracker.data.annotations.Nullable;
-import me.veloc1.timetracker.data.repository.LogsRepository;
+import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
+import me.veloc1.timetracker.data.repositories.LogsRepository;
+import me.veloc1.timetracker.data.types.Activity;
 import me.veloc1.timetracker.data.types.Log;
 import me.veloc1.timetracker.data.types.LogStatus;
 
@@ -12,14 +14,22 @@ import javax.inject.Inject;
 public class CreateLogAction implements Action<Log> {
 
   @Nullable
-  private String         description;
-  private Log            result;
-  private LogsRepository logsRepository;
-  private TimeProvider   timeProvider;
+  private final String description;
+  private final int    activityId;
 
-  public CreateLogAction(@Nullable String description) {
+  private Log result;
+
+  @Inject
+  private LogsRepository       logsRepository;
+  @Inject
+  private ActivitiesRepository activitiesRepository;
+  @Inject
+  private TimeProvider         timeProvider;
+
+  public CreateLogAction(@Nullable String description, int activityId) {
     super();
     this.description = description;
+    this.activityId = activityId;
   }
 
   @Override
@@ -33,6 +43,15 @@ public class CreateLogAction implements Action<Log> {
             Log.NO_DATE);
 
     result = logsRepository.add(toCreate);
+
+    Activity activity = activitiesRepository.getById(activityId);
+    activitiesRepository.update(
+        new Activity(
+            activityId,
+            activity.getTitle(),
+            activity.getDescription(),
+            activity.getCreatedAt(),
+            timeProvider.getCurrentTimeInMillis()));
   }
 
   @Override
@@ -40,13 +59,15 @@ public class CreateLogAction implements Action<Log> {
     return result;
   }
 
-  @Inject
   public void setLogsRepository(LogsRepository logsRepository) {
     this.logsRepository = logsRepository;
   }
 
-  @Inject
   public void setTimeProvider(TimeProvider timeProvider) {
     this.timeProvider = timeProvider;
+  }
+
+  public void setActivitiesRepository(ActivitiesRepository activitiesRepository) {
+    this.activitiesRepository = activitiesRepository;
   }
 }

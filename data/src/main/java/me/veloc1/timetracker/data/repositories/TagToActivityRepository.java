@@ -1,4 +1,4 @@
-package me.veloc1.timetracker.data.repository;
+package me.veloc1.timetracker.data.repositories;
 
 import me.veloc1.timetracker.data.types.TagToActivity;
 
@@ -7,4 +7,5 @@ import me.veloc1.timetracker.data.types.TagToActivity;
  * implementations
  */
 public interface TagToActivityRepository extends Repository<TagToActivity> {
+  void removeTagFromActivity(int tagId, int activityId);
 }

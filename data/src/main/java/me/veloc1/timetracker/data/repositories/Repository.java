@@ -1,4 +1,4 @@
-package me.veloc1.timetracker.data.repository;
+package me.veloc1.timetracker.data.repositories;
 
 public interface Repository<T> {
   /**
@@ -11,8 +11,11 @@ public interface Repository<T> {
 
   /**
    * Updates an object. If this object not exists - will throw
+   *
    * @param objectToUpdate object, which should be updated
    * @return updated object
    */
   T update(T objectToUpdate);
+
+  T getById(int id);
 }
