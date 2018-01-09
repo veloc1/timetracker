@@ -23,9 +23,5 @@ public class ApplicationModule {
     return new AndroidBackgroundActionExecutor(context);
   }
 
-  @Provides
-  @Singleton
-  ActivitiesRepository activitiesRepository() {
-    return new AndroidActivitiesRepository();
-  }
+
 }

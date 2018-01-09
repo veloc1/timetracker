@@ -1,5 +1,6 @@
 package me.veloc1.timetracker.screens.main;
 
+import me.veloc1.timetracker.data.actions.CreateActivityAction;
 import me.veloc1.timetracker.data.actions.GetAllActivitiesAction;
 import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
 import me.veloc1.timetracker.data.types.Activity;
@@ -12,18 +13,32 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
   @Override
   public void onStart() {
     super.onStart();
+    getView().showProgress();
+    execute(new CreateActivityAction("test", "desc", null), new ActionSubscriber<Activity>() {
+
+      @Override
+      public void onResult(Activity activity) {
+
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+
+      }
+    });
     execute(new GetAllActivitiesAction(), this);
-    getView().setText("started");
   }
 
   @Override
   public void onResult(List<Activity> activities) {
-    getView().setText("result");
+    getView().hideProgress();
+    getView().setItems(activities);
   }
 
   @Override
   public void onError(Throwable throwable) {
     throwable.printStackTrace();
-    getView().setText("errror");
+    getView().hideProgress();
+    getView().showError();
   }
 }
