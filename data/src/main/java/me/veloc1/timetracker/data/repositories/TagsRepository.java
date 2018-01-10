@@ -12,5 +12,5 @@ public interface TagsRepository extends Repository<Tag> {
    * @return tag object or null
    */
   Tag find(String tag);
-  List<Tag> findByActivity(int activityId);
+  List<Tag> getByIds(int[] ids);
 }

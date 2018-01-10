@@ -7,7 +7,7 @@ public interface Repository<T> {
    * @param objectToCreate pass an object you want to store
    * @return newly created object
    */
-  T add(T objectToCreate);
+  int add(T objectToCreate);
 
   /**
    * Updates an object. If this object not exists - will throw
@@ -15,7 +15,7 @@ public interface Repository<T> {
    * @param objectToUpdate object, which should be updated
    * @return updated object
    */
-  T update(T objectToUpdate);
+  void update(T objectToUpdate);
 
   T getById(int id);
 }

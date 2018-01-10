@@ -34,15 +34,23 @@ public class CreateLogAction implements Action<Log> {
 
   @Override
   public void execute() {
+    long currentTime = timeProvider.getCurrentTimeInMillis();
     Log toCreate =
         new Log(
             -1,
             description,
             LogStatus.IN_PROGRESS,
-            timeProvider.getCurrentTimeInMillis(),
+            currentTime,
             Log.NO_DATE);
 
-    result = logsRepository.add(toCreate);
+    int newId = logsRepository.add(toCreate);
+    result =
+        new Log(
+            newId,
+            description,
+            LogStatus.IN_PROGRESS,
+            currentTime,
+            Log.NO_DATE);
 
     Activity activity = activitiesRepository.getById(activityId);
     activitiesRepository.update(
@@ -51,7 +59,7 @@ public class CreateLogAction implements Action<Log> {
             activity.getTitle(),
             activity.getDescription(),
             activity.getCreatedAt(),
-            timeProvider.getCurrentTimeInMillis()));
+            currentTime));
   }
 
   @Override

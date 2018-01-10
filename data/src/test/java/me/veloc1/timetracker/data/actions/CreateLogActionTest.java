@@ -91,18 +91,11 @@ public class CreateLogActionTest extends BaseActionTest {
     LogsRepository repository = Mockito.mock(LogsRepository.class);
     BDDMockito
         .given(repository.add(Mockito.any(Log.class)))
-        .will(new Answer<Log>() {
+        .will(new Answer<Integer>() {
 
           @Override
-          public Log answer(InvocationOnMock invocation) throws Throwable {
-            Log logToCreate = (Log) invocation.getArguments()[0];
-            return
-                new Log(
-                    1,
-                    logToCreate.getDescription(),
-                    logToCreate.getStatus(),
-                    logToCreate.getStartDate(),
-                    logToCreate.getEndDate());
+          public Integer answer(InvocationOnMock invocation) throws Throwable {
+            return 1;
           }
         });
 
