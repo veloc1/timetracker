@@ -14,6 +14,7 @@ public class TimeTrackerSqliteOpenHelper extends SQLiteOpenHelper {
     super(context, NAME, null, VERSION);
     this.repositories = repositories;
 
+    // triggers onCreate and onUpdate
     getWritableDatabase().close();
 
     for (final SqliteRepository repository : repositories) {

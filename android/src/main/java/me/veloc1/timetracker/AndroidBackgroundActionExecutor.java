@@ -39,18 +39,18 @@ public class AndroidBackgroundActionExecutor implements ActionExecutor {
     handler.addFuture(resultFuture, subscriber);
   }
 
-  private class ActionCallable<R> implements Callable<R> {
-    private final Action<R>      action;
+  private class ActionCallable<RESULT> implements Callable<RESULT> {
+    private final Action<RESULT> action;
     private final ActionCallback callback;
 
-    public ActionCallable(Action<R> action, ActionCallback callback) {
+    ActionCallable(Action<RESULT> action, ActionCallback callback) {
       super();
       this.action = action;
       this.callback = callback;
     }
 
     @Override
-    public R call() throws Exception {
+    public RESULT call() {
       try {
         action.execute();
         callback.onComplete();
@@ -66,7 +66,7 @@ public class AndroidBackgroundActionExecutor implements ActionExecutor {
 
     private List<Pair<Future, ActionSubscriber>> futures;
 
-    public ActionHandler(Looper looper) {
+    ActionHandler(Looper looper) {
       super(looper);
       futures = new ArrayList<>();
     }

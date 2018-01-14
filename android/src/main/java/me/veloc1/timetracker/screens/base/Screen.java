@@ -27,4 +27,8 @@ public abstract class Screen<P extends Presenter<V>, V extends View> {
   public void start() {
     presenter.onStart();
   }
+
+  public boolean canGoBack() {
+    return true;
+  }
 }

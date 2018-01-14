@@ -12,4 +12,9 @@ public class MainScreen extends Screen<MainPresenter, MainView> {
   public int getViewId() {
     return R.layout.screen_main;
   }
+
+  @Override
+  public boolean canGoBack() {
+    return getPresenter().canGoBack();
+  }
 }

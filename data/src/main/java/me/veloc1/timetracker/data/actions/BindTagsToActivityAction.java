@@ -56,7 +56,7 @@ public class BindTagsToActivityAction implements Action<Void> {
 
   private void bindTagsToActivity(Tag[] tags, int activityId) {
     for (final Tag tag : tags) {
-      tagToActivityRepository.add(new TagToActivity(tag.getId(), activityId));
+      tagToActivityRepository.add(new TagToActivity(-1, tag.getId(), activityId));
     }
   }
 

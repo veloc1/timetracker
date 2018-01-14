@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">TimeTracker</string>
+  <string name="error_loading_activities">Oops, there was error // TODO we need a better message</string>
+  <string name="first_run_tip">To start tracking your time use \"Manage\" button, and then click \"Add activity\"</string>
 </resources>

@@ -26,4 +26,18 @@ public class Router {
 
     screenContainer.setScreen(screen);
   }
+
+  public boolean canAppFinish() {
+    if (history.size() == 0) {
+      return true;
+    }
+    int lastScreenIndex = history.size() - 1;
+    if (!history.get(lastScreenIndex).canGoBack()) {
+      return false;
+    }
+
+    Screen lastScreen = history.remove(lastScreenIndex);
+    screenContainer.setScreen(history.get(lastScreenIndex - 1));
+    return false;
+  }
 }

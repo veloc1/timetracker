@@ -35,4 +35,11 @@ public class MainActivity extends AppCompatActivity implements ScreenContainer {
 
     screen.start();
   }
+
+  @Override
+  public void onBackPressed() {
+    if (router.canAppFinish()) {
+      super.onBackPressed();
+    }
+  }
 }
