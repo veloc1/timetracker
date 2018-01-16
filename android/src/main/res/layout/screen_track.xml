@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.veloc1.timetracker.screens.track.TrackView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+  <TextView
+      android:id="@+id/duration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:textSize="24sp"
+      android:textColor="@color/textPrimary"/>
+
+  <android.support.v7.widget.AppCompatButton
+      android:id="@+id/done"
+      android:layout_below="@+id/duration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/done"
+      android:layout_centerHorizontal="true"
+      android:textColor="@android:color/white"/>
+
+</me.veloc1.timetracker.screens.track.TrackView>

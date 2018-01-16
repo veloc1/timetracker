@@ -26,19 +26,46 @@ public class MainActivity extends AppCompatActivity implements ScreenContainer {
 
   @Override
   public void setScreen(Screen screen) {
-    container.removeAllViews();
+    // we cache all views for now
+    View screenView = screen.getView();
+    if (screenView == null) {
+      LayoutInflater layoutInflater = LayoutInflater.from(this);
+      screenView = layoutInflater.inflate(screen.getViewId(), container, false);
+      screen.setView(screenView);
+    }
 
-    LayoutInflater layoutInflater = LayoutInflater.from(this);
-    View           screenView     = layoutInflater.inflate(screen.getViewId(), container, false);
-    screen.setView(screenView);
+    // first - add screenView
     container.addView(screenView);
 
-    screen.start();
+    // then - remove old views
+    for (int i = 0; i < container.getChildCount() - 1; i++) {
+      container.removeViewAt(i);
+    }
+
+    // animation?
+    /* // first - add screenView
+    container.addView(screenView);
+    screenView.setVisibility(View.GONE);
+    Animator animator = new VisibilityAnimation(screenView).toVisible();
+    animator.addListener(new AnimatorListenerAdapter() {
+
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+        // then - remove old views
+        for (int i = 0; i < container.getChildCount() - 1; i++) {
+          container.removeViewAt(i);
+        }
+      }
+    });
+    animator.start();*/
   }
 
   @Override
   public void onBackPressed() {
-    if (router.canAppFinish()) {
+    if (router.canHandleBackPress()) {
+      router.handleBackPress();
+    } else {
       super.onBackPressed();
     }
   }

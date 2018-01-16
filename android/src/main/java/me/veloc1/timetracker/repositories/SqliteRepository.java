@@ -48,11 +48,12 @@ public abstract class SqliteRepository<T> implements Repository<T> {
     SQLiteDatabase database = getWritableDatabase();
 
     ContentValues values = objectToContentValues(objectToUpdate);
-    database.update(
-        getTableName(),
-        values,
-        String.format("%1$s = ?", COLUMN_ID),
-        new String[]{getId(objectToUpdate)});
+    database
+        .update(
+            getTableName(),
+            values,
+            String.format("%1$s = ?", COLUMN_ID),
+            new String[]{getId(objectToUpdate)});
 
     database.close();
   }
@@ -76,6 +77,17 @@ public abstract class SqliteRepository<T> implements Repository<T> {
     }
     cursor.close();
     return result;
+  }
+
+  @Override
+  public void remove(int id) {
+    SQLiteDatabase database = getWritableDatabase();
+
+    database
+        .delete(
+            getTableName(),
+            String.format("%1$s = ?", COLUMN_ID),
+            new String[]{String.valueOf(id)});
   }
 
   protected SQLiteDatabase getReadableDatabase() {

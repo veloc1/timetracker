@@ -1,9 +1,11 @@
 package me.veloc1.timetracker;
 
 import android.app.Application;
+import me.veloc1.timetracker.data.repositories.LogsRepository;
 import me.veloc1.timetracker.di.ApplicationModule;
 import me.veloc1.timetracker.di.DatabaseModule;
 import me.veloc1.timetracker.repositories.AndroidActivitiesRepository;
+import me.veloc1.timetracker.repositories.AndroidLogsRepository;
 import me.veloc1.timetracker.repositories.AndroidTagToActivityRepository;
 import me.veloc1.timetracker.repositories.AndroidTagsRepository;
 import me.veloc1.timetracker.repositories.SqliteRepository;
@@ -23,7 +25,8 @@ public class TimeTrackerApp extends Application {
     AndroidActivitiesRepository    activitiesRepository    = new AndroidActivitiesRepository();
     AndroidTagsRepository          tagsRepository          = new AndroidTagsRepository();
     AndroidTagToActivityRepository tagToActivityRepository = new AndroidTagToActivityRepository();
-    initDatabase(activitiesRepository, tagsRepository, tagToActivityRepository);
+    AndroidLogsRepository                 logsRepository          = new AndroidLogsRepository();
+    initDatabase(activitiesRepository, tagsRepository, tagToActivityRepository, logsRepository);
 
     sInstance = this;
 
@@ -32,19 +35,23 @@ public class TimeTrackerApp extends Application {
         new DatabaseModule(
             activitiesRepository,
             tagsRepository,
-            tagToActivityRepository));
+            tagToActivityRepository,
+            logsRepository));
   }
 
   private void initDatabase(
       AndroidActivitiesRepository activitiesRepository,
       AndroidTagsRepository tagsRepository,
-      AndroidTagToActivityRepository tagToActivityRepository) {
+      AndroidTagToActivityRepository tagToActivityRepository,
+      AndroidLogsRepository logsRepository) {
+
     new TimeTrackerSqliteOpenHelper(
         this,
         new SqliteRepository[]{
             activitiesRepository,
             tagsRepository,
-            tagToActivityRepository
+            tagToActivityRepository,
+            logsRepository
         }
     );
   }

@@ -2,12 +2,11 @@ package me.veloc1.timetracker.data.types;
 
 import me.veloc1.timetracker.data.annotations.Nullable;
 
-import java.util.concurrent.TimeUnit;
-
 public class Log {
   public static final long NO_DATE = -1;
 
   private final int       id;
+  private final int       activityId;
   @Nullable
   private final String    description;
   private final LogStatus status;
@@ -16,10 +15,18 @@ public class Log {
   @Nullable
   private final long      endDate;
 
-  public Log(int id, String description, LogStatus status, long startDate, long endDate) {
+  public Log(
+      int id,
+      String description,
+      LogStatus status,
+      int activityId,
+      long startDate,
+      long endDate) {
+
     this.id = id;
     this.description = description;
     this.status = status;
+    this.activityId = activityId;
     this.startDate = startDate;
     this.endDate = endDate;
   }
@@ -34,6 +41,10 @@ public class Log {
 
   public LogStatus getStatus() {
     return status;
+  }
+
+  public int getActivityId() {
+    return activityId;
   }
 
   public long getStartDate() {

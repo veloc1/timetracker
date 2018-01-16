@@ -136,8 +136,10 @@ public class FabMorphAnimation {
 
     Animator removeMargin = animateMargins(transitView, layoutParams.rightMargin, 0);
     Animator removeRadius = animateRadius(transitDrawable, fab.getWidth() / 2, 0);
-    Animator changeWidth  = animateWidth(transitView, fab.getWidth(), bottomBar.getWidth());
-    Animator changeHeight = animateHeight(transitView, fab.getHeight(), bottomBar.getHeight());
+    Animator changeWidth =
+        animateWidth(transitView, fab.getWidth(), bottomBar.getMeasuredWidth());
+    Animator changeHeight =
+        animateHeight(transitView, fab.getHeight(), bottomBar.getMeasuredHeight());
 
     AnimatorSet transitAnimation = new AnimatorSet();
     transitAnimation.setInterpolator(new AnticipateOvershootInterpolator(0.5f));

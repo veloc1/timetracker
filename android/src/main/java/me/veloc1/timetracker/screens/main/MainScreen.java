@@ -14,7 +14,13 @@ public class MainScreen extends Screen<MainPresenter, MainView> {
   }
 
   @Override
-  public boolean canGoBack() {
-    return getPresenter().canGoBack();
+  public boolean canHandleBackPress() {
+    return getPresenter().canHandleBackPress();
+  }
+
+  @Override
+  public void handleBackPress() {
+    super.handleBackPress();
+    getPresenter().handleBackPress();
   }
 }

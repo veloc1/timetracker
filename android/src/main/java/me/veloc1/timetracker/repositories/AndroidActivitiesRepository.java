@@ -93,7 +93,7 @@ public class AndroidActivitiesRepository
         null,
         null,
         null,
-        COLUMN_UPDATED_AT);
+        String.format("%1$s DESC", COLUMN_UPDATED_AT));
 
     List<Activity> result = new ArrayList<>();
 

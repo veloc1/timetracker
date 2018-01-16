@@ -1,5 +1,25 @@
 <resources>
   <string name="app_name">TimeTracker</string>
+
+  <!-- COMMON -->
+  <string name="title">Title</string>
+  <string name="description">Description</string>
   <string name="error_loading_activities">Oops, there was error // TODO we need a better message</string>
+
+  <!-- MAIN -->
   <string name="first_run_tip">To start tracking your time use \"Manage\" button, and then click \"Add activity\"</string>
+  <string name="track">Track</string>
+  <string name="activities">Activities</string>
+  <string name="add_activity">Add activity</string>
+  <string name="close_menu">Close menu</string>
+
+  <!-- ADD ACTIVITY -->
+  <string name="add_activity_tip">Here you can add activity</string>
+
+  <!-- EDIT ACTIVITY -->
+  <string name="edit_activity">Edit activity</string>
+  <string name="edit_activity_tip">Here you can edit activity</string>
+
+  <!-- TRACK -->
+  <string name="done">Done</string>
 </resources>

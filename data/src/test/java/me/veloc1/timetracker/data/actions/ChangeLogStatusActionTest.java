@@ -49,6 +49,7 @@ public class ChangeLogStatusActionTest extends BaseActionTest {
                 (Integer) invocation.getArguments()[0],
                 "",
                 LogStatus.IN_PROGRESS,
+                1,
                 100,
                 200);
           }
@@ -66,7 +67,7 @@ public class ChangeLogStatusActionTest extends BaseActionTest {
     ArgumentCaptor<Log> logArgumentCaptor = ArgumentCaptor.forClass(Log.class);
 
     Mockito.verify(logsRepository).update(logArgumentCaptor.capture());
-    
+
     Log actualLog = logArgumentCaptor.getValue();
     Assert.assertEquals(1, actualLog.getId());
     Assert.assertEquals("", actualLog.getDescription());

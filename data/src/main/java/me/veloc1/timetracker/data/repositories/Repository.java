@@ -18,4 +18,6 @@ public interface Repository<T> {
   void update(T objectToUpdate);
 
   T getById(int id);
+
+  void remove(int id);
 }

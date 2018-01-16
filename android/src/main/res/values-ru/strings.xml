@@ -1,0 +1,25 @@
+<resources>
+  <string name="app_name">TimeTracker</string>
+
+  <!-- COMMON -->
+  <string name="title">Название</string>
+  <string name="description">Описание</string>
+  <string name="error_loading_activities">Произошла ошибка, обратитесь в службу поддержки</string>
+
+  <!-- MAIN -->
+  <string name="first_run_tip">Чтобы начать работать с приложением, нажмите на иконку \"Управление\" и перейдите в пункт \"Добавить активность\"</string>
+  <string name="track">Отслеживать</string>
+  <string name="activities">Активности</string>
+  <string name="add_activity">Добавить активность</string>
+  <string name="close_menu">Закрыть меню</string>
+
+  <!-- ADD ACTIVITY -->
+  <string name="add_activity_tip">Здесь вы можете добавить активности</string>
+
+  <!-- EDIT ACTIVITY -->
+  <string name="edit_activity">Редактировать</string>
+  <string name="edit_activity_tip">Здесь вы можете редактировать активности</string>
+
+  <!-- TRACK -->
+  <string name="done">Завершить</string>
+</resources>

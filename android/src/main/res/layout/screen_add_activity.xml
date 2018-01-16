@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.veloc1.timetracker.screens.add_activity.AddActivityView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+  <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/title"/>
+
+  <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/description"/>
+
+  <android.support.v7.widget.AppCompatButton
+      android:id="@+id/add"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@android:color/white"
+      android:text="@string/add_activity"/>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textSize="12sp"
+      android:textColor="@color/tip"
+      android:gravity="center"
+      android:layout_margin="16dp"
+      android:text="@string/add_activity_tip"/>
+</me.veloc1.timetracker.screens.add_activity.AddActivityView>

@@ -32,9 +32,15 @@ public class ChangeLogStatusAction implements Action<Void> {
       endDate = timeProvider.getCurrentTimeInMillis();
     }
 
-    logsRepository.update(
-        new Log(
-            logId, log.getDescription(), newStatus, log.getStartDate(), endDate));
+    logsRepository
+        .update(
+            new Log(
+                logId,
+                log.getDescription(),
+                newStatus,
+                log.getActivityId(),
+                log.getStartDate(),
+                endDate));
   }
 
   @Override
@@ -45,7 +51,6 @@ public class ChangeLogStatusAction implements Action<Void> {
   public void setLogsRepository(LogsRepository logsRepository) {
     this.logsRepository = logsRepository;
   }
-
 
   public void setTimeProvider(TimeProvider timeProvider) {
     this.timeProvider = timeProvider;

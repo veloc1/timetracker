@@ -1,4 +1,4 @@
-package me.veloc1.timetracker.screens.main;
+package me.veloc1.timetracker.screens.activities;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +10,13 @@ import me.veloc1.timetracker.data.types.Activity;
 import java.util.List;
 
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivityViewHolder> {
-  private final List<Activity> activities;
-  private final MainPresenter  presenter;
 
-  public ActivitiesAdapter(List<Activity> activities, MainPresenter presenter) {
+  private final List<Activity>      data;
+  private final ActivitiesPresenter presenter;
+
+  public ActivitiesAdapter(List<Activity> activities, ActivitiesPresenter presenter) {
     super();
-    this.activities = activities;
+    data = activities;
     this.presenter = presenter;
   }
 
@@ -24,17 +25,17 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivityViewHolder> 
     View view =
         LayoutInflater
             .from(parent.getContext())
-            .inflate(R.layout.item_main, parent, false);
+            .inflate(R.layout.item_activity, parent, false);
     return new ActivityViewHolder(view, presenter);
   }
 
   @Override
   public void onBindViewHolder(ActivityViewHolder holder, int position) {
-    holder.bind(activities.get(position));
+    holder.bind(data.get(position));
   }
 
   @Override
   public int getItemCount() {
-    return activities.size();
+    return data.size();
   }
 }

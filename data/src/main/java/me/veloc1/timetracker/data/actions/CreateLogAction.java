@@ -40,6 +40,7 @@ public class CreateLogAction implements Action<Log> {
             -1,
             description,
             LogStatus.IN_PROGRESS,
+            activityId,
             currentTime,
             Log.NO_DATE);
 
@@ -49,6 +50,7 @@ public class CreateLogAction implements Action<Log> {
             newId,
             description,
             LogStatus.IN_PROGRESS,
+            activityId,
             currentTime,
             Log.NO_DATE);
 
