@@ -1,6 +1,8 @@
 package me.veloc1.timetracker;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Intent;
 import me.veloc1.timetracker.di.ApplicationModule;
 import me.veloc1.timetracker.di.DatabaseModule;
@@ -39,7 +41,7 @@ public class TimeTrackerApp extends Application {
             tagToActivityRepository,
             logsRepository));
 
-    startService(new Intent(this, NotificationService.class));
+    initAlarmManager();
   }
 
   private void initDatabase(
@@ -57,6 +59,19 @@ public class TimeTrackerApp extends Application {
             logsRepository
         }
     );
+  }
+
+  private void initAlarmManager() {
+    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+    Intent        intent        = new Intent(this, NotificationService.class);
+    PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+    alarmManager
+        .setInexactRepeating(
+            AlarmManager.RTC,
+            0,
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            pendingIntent);
   }
 
   public void inject(Object object) {

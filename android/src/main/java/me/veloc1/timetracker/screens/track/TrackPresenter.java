@@ -1,19 +1,22 @@
 package me.veloc1.timetracker.screens.track;
 
-import me.veloc1.timetracker.data.TimeProvider;
-import me.veloc1.timetracker.data.actions.ChangeLogStatusAction;
-import me.veloc1.timetracker.data.actions.CreateLogAction;
-import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
-import me.veloc1.timetracker.data.types.Log;
-import me.veloc1.timetracker.data.types.LogStatus;
-import me.veloc1.timetracker.screens.base.Presenter;
-
-import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+
+import me.veloc1.timetracker.data.TimeProvider;
+import me.veloc1.timetracker.data.actions.ChangeLogStatusAction;
+import me.veloc1.timetracker.data.actions.CreateLogAction;
+import me.veloc1.timetracker.data.actions.GetActivityAction;
+import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
+import me.veloc1.timetracker.data.types.Activity;
+import me.veloc1.timetracker.data.types.Log;
+import me.veloc1.timetracker.data.types.LogStatus;
+import me.veloc1.timetracker.notifications.NotificationController;
+import me.veloc1.timetracker.screens.base.Presenter;
 
 public class TrackPresenter extends Presenter<TrackView> {
 
@@ -28,6 +31,9 @@ public class TrackPresenter extends Presenter<TrackView> {
 
   @Inject
   private TimeProvider timeProvider;
+
+  @Inject
+  private NotificationController notificationController;
 
   public TrackPresenter(int activityId) {
     super();
@@ -53,6 +59,7 @@ public class TrackPresenter extends Presenter<TrackView> {
         public void onResult(Log log) {
           TrackPresenter.this.log = log;
           scheduleRefresh();
+          refreshNotification(activityId, log);
         }
 
         @Override
@@ -62,6 +69,7 @@ public class TrackPresenter extends Presenter<TrackView> {
       });
     } else {
       scheduleRefresh();
+      refreshNotification(activityId, log);
     }
   }
 
@@ -87,6 +95,24 @@ public class TrackPresenter extends Presenter<TrackView> {
             TimeUnit.SECONDS);
   }
 
+  private void refreshNotification(int activityId, final Log log) {
+    execute(new GetActivityAction(activityId), new ActionSubscriber<Activity>() {
+
+      @Override
+      public void onResult(Activity activity) {
+        notificationController
+            .showLogDuration(
+                activity.getTitle(),
+                timeProvider.getCurrentTimeInMillis() - log.getStartDate());
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+
+      }
+    });
+  }
+
   private void calculateDuration() {
     long duration = timeProvider.getCurrentTimeInMillis() - log.getStartDate();
 
@@ -98,6 +124,7 @@ public class TrackPresenter extends Presenter<TrackView> {
 
       @Override
       public void onResult(Void aVoid) {
+        notificationController.showNoLog();
         getRouter().handleBackPress();
         getView().hideKeyboard();
       }
