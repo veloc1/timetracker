@@ -1,5 +1,13 @@
 package me.veloc1.timetracker.screens.main;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.GetAllActivitiesAction;
 import me.veloc1.timetracker.data.actions.GetCurrentInProgressLogAction;
@@ -7,14 +15,6 @@ import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
 import me.veloc1.timetracker.data.types.Activity;
 import me.veloc1.timetracker.data.types.Log;
 import me.veloc1.timetracker.screens.base.Presenter;
-
-import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class MainPresenter extends Presenter<MainView> implements ActionSubscriber<List<Activity>> {
 
@@ -39,7 +39,10 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
   @Override
   public void onStop() {
     super.onStop();
-    scheduledExecutorService.shutdown();
+    if (scheduledExecutorService != null) {
+      scheduledExecutorService.shutdown();
+      scheduledExecutorService = null;
+    }
   }
 
   @Override

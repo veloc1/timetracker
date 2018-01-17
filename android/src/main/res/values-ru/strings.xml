@@ -22,4 +22,18 @@
 
   <!-- TRACK -->
   <string name="done">Завершить</string>
+
+  <!-- NOTIFICATIONS -->
+  <string name="no_track">Время не отслеживается</string>
+  <string name="track_too_long">Активность отслеживается уже долгое время. Пора сделать
+    перерыв</string>
+  <string name="notification_track_tip">Начните отслеживать время используя кнопку
+    "Отслеживать" в приложении TimeTracker</string>
+
+  <plurals name="tracked_minutes">
+    <item quantity="one">Прошла %1$d минута</item>
+    <item quantity="few">Прошло %1$d минуты</item>
+    <item quantity="many">Прошло %1$d минут</item>
+    <item quantity="other">Прошло %1$d минут</item>
+  </plurals>
 </resources>

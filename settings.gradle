@@ -1,2 +1,2 @@
 rootProject.name = 'timetracker'
-include ':android', 'data'
+include ':android', ':data'

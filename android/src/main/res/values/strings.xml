@@ -22,4 +22,18 @@
 
   <!-- TRACK -->
   <string name="done">Done</string>
+
+  <!-- NOTIFICATIONS -->
+  <string name="no_track">No activity tracked</string>
+  <string name="track_too_long">Activity tracked for too long. Please, take a break</string>
+  <string name="notification_track_tip">You can track time by using "Track" button in
+    TimeTracker app</string>
+
+  <plurals name="tracked_minutes">
+    <item quantity="zero">Just started</item>
+    <item quantity="one">Tracked one minute</item>
+    <item quantity="few">Tracked %1$d minute</item>
+    <item quantity="other">Tracked %1$d minute</item>
+  </plurals>
+
 </resources>

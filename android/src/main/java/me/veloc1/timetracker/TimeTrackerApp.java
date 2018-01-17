@@ -1,7 +1,7 @@
 package me.veloc1.timetracker;
 
 import android.app.Application;
-import me.veloc1.timetracker.data.repositories.LogsRepository;
+import android.content.Intent;
 import me.veloc1.timetracker.di.ApplicationModule;
 import me.veloc1.timetracker.di.DatabaseModule;
 import me.veloc1.timetracker.repositories.AndroidActivitiesRepository;
@@ -10,6 +10,7 @@ import me.veloc1.timetracker.repositories.AndroidTagToActivityRepository;
 import me.veloc1.timetracker.repositories.AndroidTagsRepository;
 import me.veloc1.timetracker.repositories.SqliteRepository;
 import me.veloc1.timetracker.repositories.TimeTrackerSqliteOpenHelper;
+import me.veloc1.timetracker.services.NotificationService;
 import org.codejargon.feather.Feather;
 
 public class TimeTrackerApp extends Application {
@@ -25,7 +26,7 @@ public class TimeTrackerApp extends Application {
     AndroidActivitiesRepository    activitiesRepository    = new AndroidActivitiesRepository();
     AndroidTagsRepository          tagsRepository          = new AndroidTagsRepository();
     AndroidTagToActivityRepository tagToActivityRepository = new AndroidTagToActivityRepository();
-    AndroidLogsRepository                 logsRepository          = new AndroidLogsRepository();
+    AndroidLogsRepository          logsRepository          = new AndroidLogsRepository();
     initDatabase(activitiesRepository, tagsRepository, tagToActivityRepository, logsRepository);
 
     sInstance = this;
@@ -37,6 +38,8 @@ public class TimeTrackerApp extends Application {
             tagsRepository,
             tagToActivityRepository,
             logsRepository));
+
+    startService(new Intent(this, NotificationService.class));
   }
 
   private void initDatabase(
