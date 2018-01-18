@@ -2,6 +2,7 @@ package me.veloc1.timetracker.screens.main;
 
 import me.veloc1.timetracker.R;
 import me.veloc1.timetracker.screens.base.Screen;
+import me.veloc1.timetracker.screens.main.view.MainView;
 
 public class MainScreen extends Screen<MainPresenter, MainView> {
   public MainScreen() {

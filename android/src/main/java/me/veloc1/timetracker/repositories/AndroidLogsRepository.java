@@ -1,14 +1,14 @@
 package me.veloc1.timetracker.repositories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import me.veloc1.timetracker.data.repositories.LogsRepository;
 import me.veloc1.timetracker.data.types.Log;
 import me.veloc1.timetracker.data.types.LogStatus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AndroidLogsRepository
     extends SqliteRepository<Log>
@@ -98,6 +98,31 @@ public class AndroidLogsRepository
         COLUMNS,
         String.format("%1$s = ?", COLUMN_STATUS),
         new String[]{String.valueOf(status.ordinal())},
+        null,
+        null,
+        null);
+
+    List<Log> result = new ArrayList<>();
+
+    if (cursor.getCount() > 0) {
+      cursor.moveToFirst();
+      do {
+        result.add(createObjectFromCursor(cursor));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+    return result;
+  }
+
+  @Override
+  public List<Log> getLogsByActivityId(int activityId) {
+    SQLiteDatabase database = getReadableDatabase();
+    Cursor cursor = database.query(
+        TABLE_NAME,
+        COLUMNS,
+        String.format("%1$s = ?", COLUMN_ACTIVITY_ID),
+        new String[]{String.valueOf(activityId)},
         null,
         null,
         null);

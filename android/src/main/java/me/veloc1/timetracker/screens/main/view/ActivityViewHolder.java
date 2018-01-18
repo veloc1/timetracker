@@ -1,10 +1,11 @@
-package me.veloc1.timetracker.screens.main;
+package me.veloc1.timetracker.screens.main.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import me.veloc1.timetracker.R;
 import me.veloc1.timetracker.data.types.Activity;
+import me.veloc1.timetracker.screens.main.MainPresenter;
 
 public class ActivityViewHolder extends RecyclerView.ViewHolder {
 

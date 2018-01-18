@@ -1,22 +1,30 @@
 package me.veloc1.timetracker.screens.main;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import me.veloc1.timetracker.data.TimeProvider;
+import me.veloc1.timetracker.data.actions.GetActivitiesUpdatedSinceDateAction;
+import me.veloc1.timetracker.data.actions.GetActivityStatisticAction;
 import me.veloc1.timetracker.data.actions.GetAllActivitiesAction;
 import me.veloc1.timetracker.data.actions.GetCurrentInProgressLogAction;
 import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
 import me.veloc1.timetracker.data.types.Activity;
+import me.veloc1.timetracker.data.types.ActivityStatistic;
 import me.veloc1.timetracker.data.types.Log;
 import me.veloc1.timetracker.screens.base.Presenter;
+import me.veloc1.timetracker.screens.main.view.MainView;
 
-public class MainPresenter extends Presenter<MainView> implements ActionSubscriber<List<Activity>> {
+public class MainPresenter extends Presenter<MainView> {
 
   private final SimpleDateFormat durationFormat =
       new SimpleDateFormat("mm:ss", Locale.getDefault());
@@ -24,6 +32,10 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
   private boolean shouldHandleActivitiesAsAddAction;
   private boolean isMenuOpen;
   private Log     currentLog;
+
+  private boolean isErrorInStatistic;
+
+  private List<ActivityStatisticDisplayItem> statistics;
 
   @Inject
   private TimeProvider             timeProvider;
@@ -33,7 +45,14 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
   public void onStart() {
     super.onStart();
     getView().showProgress();
-    execute(new GetAllActivitiesAction(), this);
+    execute(new GetAllActivitiesAction(), new ActivitiesListSubscriber());
+
+    statistics = new ArrayList<>();
+    isErrorInStatistic = false;
+
+    long currentTime = timeProvider.getCurrentTimeInMillis();
+    long agoTime     = currentTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
+    execute(new GetActivitiesUpdatedSinceDateAction(agoTime), new StatisticSubscriber());
   }
 
   @Override
@@ -43,32 +62,6 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
       scheduledExecutorService.shutdown();
       scheduledExecutorService = null;
     }
-  }
-
-  @Override
-  public void onResult(final List<Activity> activities) {
-    execute(new GetCurrentInProgressLogAction(), new ActionSubscriber<Log>() {
-
-      @Override
-      public void onResult(Log log) {
-        showActivities(activities);
-
-        if (log != null) {
-          currentLog = log;
-          getView().refreshList();
-
-          scheduleUpdate();
-        } else {
-          currentLog = null;
-          getView().refreshList();
-        }
-      }
-
-      @Override
-      public void onError(Throwable throwable) {
-        throwable.printStackTrace();
-      }
-    });
   }
 
   private void showActivities(List<Activity> activities) {
@@ -88,13 +81,6 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
     }
   }
 
-  @Override
-  public void onError(Throwable throwable) {
-    throwable.printStackTrace();
-    getView().hideProgress();
-    getView().showError();
-  }
-
   public void onTrackClick(int activityId) {
     if (currentLog != null) {
       getRouter().startTrackScreen(currentLog);
@@ -105,10 +91,8 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
 
   public String getCurrentDuration(int activityId) {
     if (currentLog != null && currentLog.getActivityId() == activityId) {
-      return
-          durationFormat
-              .format(
-                  timeProvider.getCurrentTimeInMillis() - currentLog.getStartDate());
+      long duration = timeProvider.getCurrentTimeInMillis() - currentLog.getStartDate();
+      return durationFormat.format(duration);
     }
     return "";
   }
@@ -186,6 +170,103 @@ public class MainPresenter extends Presenter<MainView> implements ActionSubscrib
   public void handleBackPress() {
     if (isMenuOpen) {
       closeMenu();
+    }
+  }
+
+  public List<ActivityStatisticDisplayItem> getStatistics() {
+    return statistics;
+  }
+
+  public boolean isErrorInStatistic() {
+    return isErrorInStatistic;
+  }
+
+  private class ActivitiesListSubscriber implements ActionSubscriber<List<Activity>> {
+
+    @Override
+    public void onResult(final List<Activity> activities) {
+      execute(new GetCurrentInProgressLogAction(), new ActionSubscriber<Log>() {
+
+        @Override
+        public void onResult(Log log) {
+          showActivities(activities);
+
+          if (log != null) {
+            currentLog = log;
+            getView().refreshList();
+
+            scheduleUpdate();
+          } else {
+            currentLog = null;
+            getView().refreshList();
+          }
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+          throwable.printStackTrace();
+        }
+      });
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+      throwable.printStackTrace();
+      getView().hideProgress();
+      getView().showError();
+    }
+  }
+
+  private class StatisticSubscriber implements ActionSubscriber<List<Activity>> {
+    @Override
+    public void onResult(final List<Activity> activities) {
+      execute(
+          new GetActivityStatisticAction(activities),
+          new ActionSubscriber<List<ActivityStatistic>>() {
+
+            @Override
+            public void onResult(List<ActivityStatistic> statistic) {
+              isErrorInStatistic = false;
+              List<ActivityStatisticDisplayItem> displayItems = new ArrayList<>();
+              for (final Activity activity : activities) {
+                for (ActivityStatistic statisticItem : statistic) {
+                  if (activity.getId() == statisticItem.getActivityId()) {
+                    ActivityStatisticDisplayItem item =
+                        new ActivityStatisticDisplayItem(
+                            activity.getId(),
+                            activity.getTitle(),
+                            // TODO: 19.01.2018 assign color to activity
+                            new Random().nextInt(255 * 255 * 255) + 0xff000000,
+                            statisticItem.getTotalDuration());
+
+                    displayItems.add(item);
+                    break;
+                  }
+                }
+              }
+              Collections.sort(displayItems, new Comparator<ActivityStatisticDisplayItem>() {
+
+                @Override
+                public int compare(
+                    ActivityStatisticDisplayItem o1, ActivityStatisticDisplayItem o2) {
+                  return Float.valueOf(o2.getValue()).compareTo(o1.getValue());
+                }
+              });
+              statistics = displayItems.subList(0, 5);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+              throwable.printStackTrace();
+              isErrorInStatistic = true;
+            }
+          });
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+      throwable.printStackTrace();
+      isErrorInStatistic = true;
     }
   }
 }

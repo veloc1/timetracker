@@ -1,4 +1,6 @@
-package me.veloc1.timetracker.screens.main;
+package me.veloc1.timetracker.screens.main.view;
+
+import java.util.List;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import me.veloc1.timetracker.R;
 import me.veloc1.timetracker.data.types.Activity;
+import me.veloc1.timetracker.screens.main.MainPresenter;
 import me.veloc1.timetracker.ui.animations.FabMorphAnimation;
 import me.veloc1.timetracker.ui.animations.VisibilityAnimation;
-
-import java.util.List;
 
 public class MainView extends RelativeLayout implements View.OnClickListener {
 

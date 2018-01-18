@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<me.veloc1.timetracker.screens.main.MainView
+<me.veloc1.timetracker.screens.main.view.MainView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -100,4 +100,4 @@
       android:layout_height="match_parent"
       android:id="@+id/progress"/>
 
-</me.veloc1.timetracker.screens.main.MainView>
+</me.veloc1.timetracker.screens.main.view.MainView>

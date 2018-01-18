@@ -96,7 +96,7 @@ public class FabMorphAnimation {
 
     Animator showBottomBar = new VisibilityAnimation(bottomBar).toVisible();
 
-    int duration = fab.getResources().getInteger(android.R.integer.config_longAnimTime);
+    int duration = fab.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     AnimatorSet fullAnimation = new AnimatorSet();
     fullAnimation.setDuration(duration);
@@ -117,7 +117,7 @@ public class FabMorphAnimation {
 
     Animator showFab = new VisibilityAnimation(fab).toVisible();
 
-    int duration = fab.getResources().getInteger(android.R.integer.config_longAnimTime);
+    int duration = fab.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     AnimatorSet fullAnimation = new AnimatorSet();
     fullAnimation.setDuration(duration);

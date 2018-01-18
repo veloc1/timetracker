@@ -1,13 +1,13 @@
 package me.veloc1.timetracker.repositories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
 import me.veloc1.timetracker.data.types.Activity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AndroidActivitiesRepository
     extends SqliteRepository<Activity>
@@ -91,6 +91,31 @@ public class AndroidActivitiesRepository
         COLUMNS,
         null,
         null,
+        null,
+        null,
+        String.format("%1$s DESC", COLUMN_UPDATED_AT));
+
+    List<Activity> result = new ArrayList<>();
+
+    if (cursor.getCount() > 0) {
+      cursor.moveToFirst();
+      do {
+        result.add(createObjectFromCursor(cursor));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+    return result;
+  }
+
+  @Override
+  public List<Activity> getActivitiesUpdatedSinceDate(long sinceDate) {
+    SQLiteDatabase database = getReadableDatabase();
+    Cursor cursor = database.query(
+        TABLE_NAME,
+        COLUMNS,
+        String.format("%1$s > ?", COLUMN_UPDATED_AT),
+        new String[]{String.valueOf(sinceDate)},
         null,
         null,
         String.format("%1$s DESC", COLUMN_UPDATED_AT));
