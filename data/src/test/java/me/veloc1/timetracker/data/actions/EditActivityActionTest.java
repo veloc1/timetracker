@@ -1,5 +1,8 @@
 package me.veloc1.timetracker.data.actions;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.BaseActionTest;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
@@ -12,9 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class EditActivityActionTest extends BaseActionTest {
 
   @Test
@@ -22,7 +22,7 @@ public class EditActivityActionTest extends BaseActionTest {
     String title       = "title";
     String description = "test description";
 
-    EditActivityAction action = new EditActivityAction(1, title, description);
+    EditActivityAction action = new EditActivityAction(1, title, description, 1);
 
     ActivitiesRepository activitiesRepository = initActivitiesRepository(action);
 
@@ -83,6 +83,7 @@ public class EditActivityActionTest extends BaseActionTest {
                     (Integer) invocation.getArguments()[0],
                     "",
                     "",
+                    1,
                     100L,
                     200L);
           }

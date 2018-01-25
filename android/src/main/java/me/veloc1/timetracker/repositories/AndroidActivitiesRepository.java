@@ -16,6 +16,7 @@ public class AndroidActivitiesRepository
   private static final String TABLE_NAME         = "activities";
   private static final String COLUMN_TITLE       = "title";
   private static final String COLUMN_DESCRIPTION = "description";
+  private static final String COLUMN_COLOR       = "color";
   private static final String COLUMN_CREATED_AT  = "created_at";
   private static final String COLUMN_UPDATED_AT  = "updated_at";
 
@@ -24,6 +25,7 @@ public class AndroidActivitiesRepository
           COLUMN_ID,
           COLUMN_TITLE,
           COLUMN_DESCRIPTION,
+          COLUMN_COLOR,
           COLUMN_CREATED_AT,
           COLUMN_UPDATED_AT};
 
@@ -35,14 +37,26 @@ public class AndroidActivitiesRepository
             "%2$s INTEGER PRIMARY KEY AUTOINCREMENT," +
             "%3$s TEXT," +
             "%4$s TEXT," +
-            "%5$s REAL," +
-            "%6$s REAL)",
+            "%5$s INTEGER," +
+            "%6$s REAL," +
+            "%7$s REAL)",
             TABLE_NAME,
             COLUMN_ID,
             COLUMN_TITLE,
             COLUMN_DESCRIPTION,
+            COLUMN_COLOR,
             COLUMN_CREATED_AT,
             COLUMN_UPDATED_AT));
+  }
+
+  @Override
+  public void updateTable(SQLiteDatabase db, int oldVersion, int newVersion) {
+    super.updateTable(db, oldVersion, newVersion);
+    if (newVersion == 2) {
+      db.execSQL(
+          String.format("ALTER TABLE %1$s ADD COLUMN %2$s INTEGER DEFAULT 0", getTableName(),
+                        COLUMN_COLOR));
+    }
   }
 
   @Override
@@ -56,6 +70,7 @@ public class AndroidActivitiesRepository
     values.put(COLUMN_ID, object.getId());
     values.put(COLUMN_TITLE, object.getTitle());
     values.put(COLUMN_DESCRIPTION, object.getDescription());
+    values.put(COLUMN_COLOR, object.getColor());
     values.put(COLUMN_CREATED_AT, object.getCreatedAt());
     values.put(COLUMN_UPDATED_AT, object.getUpdatedAt());
 
@@ -69,6 +84,7 @@ public class AndroidActivitiesRepository
             cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
             cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)),
             cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)),
+            cursor.getInt(cursor.getColumnIndex(COLUMN_COLOR)),
             cursor.getLong(cursor.getColumnIndex(COLUMN_CREATED_AT)),
             cursor.getLong(cursor.getColumnIndex(COLUMN_UPDATED_AT)));
   }

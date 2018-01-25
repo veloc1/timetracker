@@ -17,6 +17,9 @@ public abstract class SqliteRepository<T> implements Repository<T> {
 
   public abstract void createTable(SQLiteDatabase database);
 
+  public void updateTable(SQLiteDatabase db, int oldVersion, int newVersion) {
+  }
+
   // I've created this method, because I can't use encapsulation. We can store any object, not
   // only objects inherited from BaseModel
   protected abstract String getId(T object);
@@ -26,8 +29,8 @@ public abstract class SqliteRepository<T> implements Repository<T> {
   protected abstract T createObjectFromCursor(Cursor cursor);
 
   protected abstract String getTableName();
-
   // This can be replaced with reflection and annotation parsing
+
   protected abstract String[] getAllColumns();
 
   @Override

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <declare-styleable name="ActivityStatisticDiagram">
-    <attr name="gridWidth" format="dimension"/>
-    <attr name="gridSectionCount" format="integer"/>
-    <attr name="columnWidth" format="dimension"/>
+    <attr name="gridWidth" format="dimension" />
+    <attr name="gridSectionCount" format="integer" />
+    <attr name="columnWidth" format="dimension" />
   </declare-styleable>
+
 </resources>

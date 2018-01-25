@@ -1,33 +1,29 @@
 package me.veloc1.timetracker.data.actions;
 
+import javax.inject.Inject;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.Action;
-import me.veloc1.timetracker.data.annotations.Nullable;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
-import me.veloc1.timetracker.data.repositories.TagToActivityRepository;
-import me.veloc1.timetracker.data.repositories.TagsRepository;
 import me.veloc1.timetracker.data.types.Activity;
-import me.veloc1.timetracker.data.types.Tag;
-import me.veloc1.timetracker.data.types.TagToActivity;
-
-import javax.inject.Inject;
-import java.util.List;
 
 public class EditActivityAction implements Action<Void> {
 
-  private final int      activityId;
-  private final String   newTitle;
-  private final String   newDescription;
+  private final int    activityId;
+  private final String newTitle;
+  private final String newDescription;
+  private final int newColor;
 
   @Inject
-  private ActivitiesRepository    activitiesRepository;
+  private ActivitiesRepository activitiesRepository;
   @Inject
-  private TimeProvider            timeProvider;
+  private TimeProvider         timeProvider;
 
-  public EditActivityAction(int activityId, String newTitle, String newDescription) {
+  public EditActivityAction(int activityId, String newTitle, String newDescription, int newColor) {
     this.activityId = activityId;
     this.newTitle = newTitle;
     this.newDescription = newDescription;
+    this.newColor = newColor;
   }
 
   @Override
@@ -39,6 +35,7 @@ public class EditActivityAction implements Action<Void> {
             activityId,
             newTitle,
             newDescription,
+            newColor,
             activity.getCreatedAt(),
             timeProvider.getCurrentTimeInMillis()));
   }

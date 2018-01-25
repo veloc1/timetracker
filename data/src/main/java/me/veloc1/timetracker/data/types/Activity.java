@@ -4,13 +4,22 @@ public class Activity {
   private final int    id;
   private final String title;
   private final String description;
+  private final int    color;
   private final long   createdAt;
   private final long   updatedAt;
 
-  public Activity(int id, String title, String description, long createdAt, long updatedAt) {
+  public Activity(
+      int id,
+      String title,
+      String description,
+      int color,
+      long createdAt,
+      long updatedAt) {
+
     this.id = id;
     this.title = title;
     this.description = description;
+    this.color = color;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -25,6 +34,10 @@ public class Activity {
 
   public String getDescription() {
     return description;
+  }
+
+  public int getColor() {
+    return color;
   }
 
   public long getCreatedAt() {

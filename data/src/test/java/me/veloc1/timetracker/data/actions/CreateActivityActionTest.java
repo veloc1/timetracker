@@ -22,7 +22,7 @@ public class CreateActivityActionTest extends BaseActionTest {
     String title       = "title";
     String description = "test description";
 
-    CreateActivityAction action = new CreateActivityAction(title, description);
+    CreateActivityAction action = new CreateActivityAction(title, description, color);
 
     ActivitiesRepository repository = initActivitiesRepository(action);
 
@@ -40,7 +40,7 @@ public class CreateActivityActionTest extends BaseActionTest {
 
   @Test(expected = NullPointerException.class)
   public void createActivityWithError() throws Throwable {
-    CreateActivityAction action = new CreateActivityAction(null, null);
+    CreateActivityAction action = new CreateActivityAction(null, null, color);
 
     ActivitiesRepository repository = initActivitiesRepository(action);
 

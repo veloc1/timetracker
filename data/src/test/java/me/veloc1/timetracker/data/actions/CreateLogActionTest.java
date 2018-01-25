@@ -1,5 +1,7 @@
 package me.veloc1.timetracker.data.actions;
 
+import java.util.Calendar;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.BaseActionTest;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
@@ -14,8 +16,6 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.util.Calendar;
 
 public class CreateLogActionTest extends BaseActionTest {
   @Test
@@ -115,6 +115,7 @@ public class CreateLogActionTest extends BaseActionTest {
                     1,
                     "",
                     "",
+                    0,
                     100L,
                     300L);
           }

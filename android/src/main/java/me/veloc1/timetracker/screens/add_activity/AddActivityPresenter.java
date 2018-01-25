@@ -9,8 +9,8 @@ public class AddActivityPresenter
     extends Presenter<AddActivityView>
     implements ActionSubscriber<Activity> {
 
-  public void onAddClick(String title, String description) {
-    CreateActivityAction action = new CreateActivityAction(title, description);
+  public void onAddClick(String title, String description, int color) {
+    CreateActivityAction action = new CreateActivityAction(title, description, color);
     execute(action, this);
   }
 

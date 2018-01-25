@@ -11,6 +11,7 @@ public class ActivityViewHolder extends RecyclerView.ViewHolder {
 
   private final TextView      title;
   private final TextView      duration;
+  private final View          color;
   private final View          track;
   private final MainPresenter presenter;
 
@@ -18,14 +19,15 @@ public class ActivityViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     title = (TextView) itemView.findViewById(R.id.title);
     duration = (TextView) itemView.findViewById(R.id.duration);
+    color = itemView.findViewById(R.id.color);
     track = itemView.findViewById(R.id.track);
     this.presenter = presenter;
   }
 
   public void bind(final Activity activity) {
     title.setText(activity.getTitle());
-
     duration.setText(presenter.getCurrentDuration(activity.getId()));
+    color.setBackgroundColor(activity.getColor());
 
     if (presenter.shouldViewShowTrackButton(activity.getId())) {
       track.setVisibility(View.VISIBLE);

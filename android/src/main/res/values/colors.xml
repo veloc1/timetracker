@@ -11,4 +11,10 @@
   <color name="textPrimary">#111111</color>
   <color name="tip">#666666</color>
 
+  <color name="color1">#bf360c</color>
+  <color name="color2">#c0ca33</color>
+  <color name="color3">#4caf50</color>
+  <color name="color4">#4db6ac</color>
+  <color name="color5">#673ab7</color>
+
 </resources>

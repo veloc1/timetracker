@@ -36,8 +36,8 @@ public class EditActivityPresenter
     });
   }
 
-  public void onAddClick(String title, String description) {
-    EditActivityAction action = new EditActivityAction(activityId, title, description);
+  public void onAddClick(String title, String description, int newColor) {
+    EditActivityAction action = new EditActivityAction(activityId, title, description, newColor);
     execute(action, this);
   }
 

@@ -6,8 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TimeTrackerSqliteOpenHelper extends SQLiteOpenHelper {
 
-  private static final String NAME    = "timetracker.db";
-  private static final int    VERSION = 1; // initial setup
+  private static final String NAME = "timetracker.db";
+
+  /**
+   * Versions:
+   * 1 - initial setup
+   * 2 - added color to activity
+   */
+  private static final int VERSION = 2;
   private final SqliteRepository[] repositories;
 
   public TimeTrackerSqliteOpenHelper(Context context, SqliteRepository[] repositories) {
@@ -31,6 +37,8 @@ public class TimeTrackerSqliteOpenHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    // TODO: 09.01.2018 migrations
+    for (final SqliteRepository repository : repositories) {
+      repository.updateTable(db, oldVersion, newVersion);
+    }
   }
 }

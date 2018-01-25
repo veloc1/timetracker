@@ -60,6 +60,7 @@ public class CreateLogAction implements Action<Log> {
             activityId,
             activity.getTitle(),
             activity.getDescription(),
+            activity.getColor(),
             activity.getCreatedAt(),
             currentTime));
   }

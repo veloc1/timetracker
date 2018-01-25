@@ -13,11 +13,13 @@ public class ActivityViewHolder extends RecyclerView.ViewHolder {
   private final View     edit;
 
   private final ActivitiesPresenter presenter;
+  private final View                color;
 
   public ActivityViewHolder(View itemView, ActivitiesPresenter presenter) {
     super(itemView);
 
     title = (TextView) itemView.findViewById(R.id.title);
+    color = itemView.findViewById(R.id.color);
     edit = itemView.findViewById(R.id.edit);
     remove = itemView.findViewById(R.id.remove);
 
@@ -26,6 +28,7 @@ public class ActivityViewHolder extends RecyclerView.ViewHolder {
 
   public void bind(final Activity activity) {
     title.setText(activity.getTitle());
+    color.setBackgroundColor(activity.getColor());
     edit.setOnClickListener(new View.OnClickListener() {
 
       @Override

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -235,8 +234,7 @@ public class MainPresenter extends Presenter<MainView> {
                         new ActivityStatisticDisplayItem(
                             activity.getId(),
                             activity.getTitle(),
-                            // TODO: 19.01.2018 assign color to activity
-                            new Random().nextInt(255 * 255 * 255) + 0xff000000,
+                            activity.getColor(),
                             statisticItem.getTotalDuration());
 
                     displayItems.add(item);

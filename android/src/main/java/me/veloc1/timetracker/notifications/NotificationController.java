@@ -9,43 +9,44 @@ import me.veloc1.timetracker.R;
 
 public class NotificationController {
 
-  private final Context                   context;
-  private final NotificationManagerCompat notificationManager;
+  private final int notificationId = 1;
+
+  private final Context                    context;
+  private final NotificationManagerCompat  notificationManager;
+  private final NotificationCompat.Builder notificationBuilder;
 
   public NotificationController(Context context) {
     super();
 
     this.context = context;
     notificationManager = NotificationManagerCompat.from(context);
+    notificationBuilder = createNotification();
   }
 
   public void showLogDuration(String activityTitle, long duration) {
-    NotificationCompat.Builder builder = createNotification();
-
     int durationMinutes = (int) TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS);
     String notificationMessage =
         context
             .getResources()
             .getQuantityString(R.plurals.tracked_minutes, durationMinutes, durationMinutes);
 
-    builder.setContentTitle(activityTitle);
+    notificationBuilder.setContentTitle(activityTitle);
 
     if (durationMinutes > 25) {
-      builder.setContentText(context.getString(R.string.track_too_long));
+      notificationBuilder.setContentText(context.getString(R.string.track_too_long));
 
-      builder.setSubText(notificationMessage);
+      notificationBuilder.setSubText(notificationMessage);
     } else {
-      builder.setContentText(notificationMessage);
+      notificationBuilder.setContentText(notificationMessage);
     }
 
-    notificationManager.notify(1, builder.build());
+    notificationManager.notify(notificationId, notificationBuilder.build());
   }
 
   public void showNoLog() {
-    NotificationCompat.Builder builder = createNotification();
-    builder.setContentTitle(context.getString(R.string.no_track));
-    builder.setContentText(context.getString(R.string.notification_track_tip));
-    notificationManager.notify(1, builder.build());
+    notificationBuilder.setContentTitle(context.getString(R.string.no_track));
+    notificationBuilder.setContentText(context.getString(R.string.notification_track_tip));
+    notificationManager.notify(notificationId, notificationBuilder.build());
   }
 
   private NotificationCompat.Builder createNotification() {
@@ -53,6 +54,8 @@ public class NotificationController {
         new NotificationCompat.Builder(context);
 
     builder.setSmallIcon(R.mipmap.ic_launcher);
+    builder.setOngoing(true);
+    builder.setAutoCancel(false);
     return builder;
   }
 }

@@ -1,11 +1,11 @@
 package me.veloc1.timetracker.data.actions;
 
+import javax.inject.Inject;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.Action;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
 import me.veloc1.timetracker.data.types.Activity;
-
-import javax.inject.Inject;
 
 /**
  * Creates an activity with given fields and bind newly created activity to given tags.
@@ -14,6 +14,7 @@ public class CreateActivityAction implements Action<Activity> {
 
   private final String title;
   private final String description;
+  private final int    color;
 
   private Activity result;
 
@@ -22,9 +23,10 @@ public class CreateActivityAction implements Action<Activity> {
   @Inject
   private TimeProvider         timeProvider;
 
-  public CreateActivityAction(String title, String description) {
+  public CreateActivityAction(String title, String description, int color) {
     this.title = title;
     this.description = description;
+    this.color = color;
   }
 
   @Override
@@ -35,6 +37,7 @@ public class CreateActivityAction implements Action<Activity> {
             -1,
             title,
             description,
+            color,
             currentTime,
             currentTime);
 
@@ -44,6 +47,7 @@ public class CreateActivityAction implements Action<Activity> {
             newId,
             title,
             description,
+            color,
             currentTime,
             currentTime);
   }

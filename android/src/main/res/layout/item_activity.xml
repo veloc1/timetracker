@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingTop="8dp">
+
+  <View
+      android:id="@+id/color"
+      android:layout_width="16dp"
+      android:layout_height="16dp"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp" />
 
   <TextView
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_toLeftOf="@+id/edit"
-      android:layout_toStartOf="@+id/edit"
       android:layout_centerVertical="true"
+      android:layout_toEndOf="@+id/color"
+      android:layout_toLeftOf="@+id/edit"
+      android:layout_toRightOf="@+id/color"
+      android:layout_toStartOf="@+id/edit"
       android:textColor="@color/textPrimary"
-      android:textSize="16sp"/>
+      android:textSize="16sp" />
 
   <ImageView
       android:id="@+id/edit"
-      android:src="@android:drawable/ic_menu_edit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_toLeftOf="@+id/remove"
       android:layout_toStartOf="@+id/remove"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:src="@android:drawable/ic_menu_edit" />
 
   <ImageView
       android:id="@+id/remove"
-      android:src="@android:drawable/ic_menu_delete"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentEnd="true"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:src="@android:drawable/ic_menu_delete" />
 </RelativeLayout>

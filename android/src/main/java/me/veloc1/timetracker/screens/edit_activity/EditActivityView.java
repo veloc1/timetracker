@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import me.veloc1.timetracker.R;
+import me.veloc1.timetracker.ui.views.ColorPicker;
 
 public class EditActivityView extends LinearLayout implements View.OnClickListener {
 
@@ -17,6 +18,7 @@ public class EditActivityView extends LinearLayout implements View.OnClickListen
   private TextView description;
 
   private EditActivityPresenter presenter;
+  private ColorPicker colorPicker;
 
   public EditActivityView(Context context) {
     super(context);
@@ -42,6 +44,7 @@ public class EditActivityView extends LinearLayout implements View.OnClickListen
 
     title = (TextView) findViewById(R.id.title);
     description = (TextView) findViewById(R.id.description);
+    colorPicker = (ColorPicker) findViewById(R.id.color_picker);
   }
 
   public void setTitle(String title) {
@@ -69,7 +72,11 @@ public class EditActivityView extends LinearLayout implements View.OnClickListen
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.add:
-        presenter.onAddClick(title.getText().toString(), description.getText().toString());
+        presenter
+            .onAddClick(
+                title.getText().toString(),
+                description.getText().toString(),
+                colorPicker.getSelectedColor());
         break;
       default:
         throw new RuntimeException("Default branch is not implemented");
