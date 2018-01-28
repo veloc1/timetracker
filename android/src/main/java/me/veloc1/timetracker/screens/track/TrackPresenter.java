@@ -1,12 +1,11 @@
 package me.veloc1.timetracker.screens.track;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
+import me.veloc1.timetracker.data.DurationFormatter;
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.ChangeLogStatusAction;
 import me.veloc1.timetracker.data.actions.CreateLogAction;
@@ -20,9 +19,6 @@ import me.veloc1.timetracker.screens.base.Presenter;
 
 public class TrackPresenter extends Presenter<TrackView> {
 
-  private final SimpleDateFormat durationFormat =
-      new SimpleDateFormat("mm:ss", Locale.getDefault());
-
   private final int activityId;
 
   private Log log;
@@ -30,16 +26,24 @@ public class TrackPresenter extends Presenter<TrackView> {
   private ScheduledExecutorService executorService;
 
   @Inject
-  private TimeProvider timeProvider;
+  private TimeProvider      timeProvider;
+  @Inject
+  private DurationFormatter durationFormatter;
 
   @Inject
   private NotificationController notificationController;
 
+  /**
+   * This constructor creates new {@link Log} object, and start track immediately
+   */
   public TrackPresenter(int activityId) {
     super();
     this.activityId = activityId;
   }
 
+  /**
+   * This constructor uses already created {@link Log} object
+   */
   public TrackPresenter(Log log) {
     super();
     activityId = log.getActivityId();
@@ -115,8 +119,7 @@ public class TrackPresenter extends Presenter<TrackView> {
 
   private void calculateDuration() {
     long duration = timeProvider.getCurrentTimeInMillis() - log.getStartDate();
-
-    getView().setTrackedTime(durationFormat.format(duration));
+    getView().setTrackedTime(durationFormatter.getFormattedString(duration));
   }
 
   public void onDoneClick() {

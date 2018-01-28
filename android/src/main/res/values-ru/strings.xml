@@ -32,10 +32,20 @@
   <string name="notification_track_tip">Начните отслеживать время используя кнопку
     "Отслеживать" в приложении TimeTracker</string>
 
+  <string name="action_open">Открыть</string>
+  <string name="action_stop">Остановить</string>
+
   <plurals name="tracked_minutes">
     <item quantity="one">Прошла %1$d минута</item>
     <item quantity="few">Прошло %1$d минуты</item>
     <item quantity="many">Прошло %1$d минут</item>
     <item quantity="other">Прошло %1$d минут</item>
+  </plurals>
+
+  <plurals name="tracked_hours">
+    <item quantity="one">Прошел %1$d час</item>
+    <item quantity="few">Прошло %1$d часов</item>
+    <item quantity="many">Прошло %1$d часов</item>
+    <item quantity="other">Прошло %1$d часов</item>
   </plurals>
 </resources>

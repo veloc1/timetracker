@@ -1,5 +1,8 @@
 package me.veloc1.timetracker.data.actions;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.base.BaseActionTest;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
@@ -12,15 +15,13 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class CreateActivityActionTest extends BaseActionTest {
 
   @Test
   public void createActivityWithoutTags() throws Throwable {
     String title       = "title";
     String description = "test description";
+    int    color       = 0xff00ff;
 
     CreateActivityAction action = new CreateActivityAction(title, description, color);
 
@@ -40,7 +41,7 @@ public class CreateActivityActionTest extends BaseActionTest {
 
   @Test(expected = NullPointerException.class)
   public void createActivityWithError() throws Throwable {
-    CreateActivityAction action = new CreateActivityAction(null, null, color);
+    CreateActivityAction action = new CreateActivityAction(null, null, 0);
 
     ActivitiesRepository repository = initActivitiesRepository(action);
 
@@ -50,7 +51,6 @@ public class CreateActivityActionTest extends BaseActionTest {
 
     Mockito.verifyNoMoreInteractions(repository);
   }
-
 
   private ActivitiesRepository initActivitiesRepository(CreateActivityAction action) {
     ActivitiesRepository repository = mockActivitiesRepository();

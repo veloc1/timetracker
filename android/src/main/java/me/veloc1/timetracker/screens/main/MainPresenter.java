@@ -1,16 +1,15 @@
 package me.veloc1.timetracker.screens.main;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
+import me.veloc1.timetracker.data.DurationFormatter;
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.GetActivitiesUpdatedSinceDateAction;
 import me.veloc1.timetracker.data.actions.GetActivityStatisticAction;
@@ -25,9 +24,6 @@ import me.veloc1.timetracker.screens.main.view.MainView;
 
 public class MainPresenter extends Presenter<MainView> {
 
-  private final SimpleDateFormat durationFormat =
-      new SimpleDateFormat("mm:ss", Locale.getDefault());
-
   private boolean shouldHandleActivitiesAsAddAction;
   private boolean isMenuOpen;
   private Log     currentLog;
@@ -37,7 +33,10 @@ public class MainPresenter extends Presenter<MainView> {
   private List<ActivityStatisticDisplayItem> statistics;
 
   @Inject
-  private TimeProvider             timeProvider;
+  private TimeProvider      timeProvider;
+  @Inject
+  private DurationFormatter durationFormatter;
+
   private ScheduledExecutorService scheduledExecutorService;
 
   @Override
@@ -91,7 +90,7 @@ public class MainPresenter extends Presenter<MainView> {
   public String getCurrentDuration(int activityId) {
     if (currentLog != null && currentLog.getActivityId() == activityId) {
       long duration = timeProvider.getCurrentTimeInMillis() - currentLog.getStartDate();
-      return durationFormat.format(duration);
+      return durationFormatter.getFormattedString(duration);
     }
     return "";
   }
