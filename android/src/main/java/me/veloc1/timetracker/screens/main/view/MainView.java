@@ -66,11 +66,7 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
     activitiesText = (TextView) findViewById(R.id.activities_text);
 
     bottomBar = findViewById(R.id.bottom_bar);
-    bottomBar.setAlpha(0); // we can't set visibility to gone, because view get width = 0
-    // this width will be used in animation
-
-    // so we get a little hack. Disable buttons when menu close, and enable on menu open
-    disableMenu();
+    hackBottomBar();
 
     firstRunTip = findViewById(R.id.first_run_tip);
 
@@ -166,6 +162,33 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
 
   public void enableMenu() {
     activities.setEnabled(true);
+  }
+
+  private void hackBottomBar() {
+    bottomBar.setAlpha(0); // we can't set visibility to gone, because view get width = 0
+    // this width will be used in animation
+
+    // so we get a little hack. Disable buttons when menu close, and enable on menu open
+    disableMenu();
+
+    // set visibility to gone on next layout iteration
+    addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+      @Override
+      public void onLayoutChange(
+          View v,
+          int left,
+          int top,
+          int right,
+          int bottom,
+          int oldLeft,
+          int oldTop,
+          int oldRight,
+          int oldBottom) {
+        bottomBar.setVisibility(GONE);
+        removeOnLayoutChangeListener(this);
+      }
+    });
   }
 
   public void setPresenter(MainPresenter presenter) {
