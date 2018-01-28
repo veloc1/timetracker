@@ -81,9 +81,9 @@ public class MainPresenter extends Presenter<MainView> {
 
   public void onTrackClick(int activityId) {
     if (currentLog != null) {
-      getRouter().startTrackScreen(currentLog);
+      getRouter().startTrackScreen(currentLog.getId(), currentLog.getActivityId());
     } else {
-      getRouter().startTrackScreen(activityId);
+      getRouter().startNewTrackScreen(activityId);
     }
   }
 

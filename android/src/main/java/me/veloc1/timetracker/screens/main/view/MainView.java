@@ -92,13 +92,15 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
 
   public void refreshList() {
     // TODO: 16.01.2018 remove handler call
-    getHandler().post(new Runnable() {
+    if (getHandler() != null) {
+      getHandler().post(new Runnable() {
 
-      @Override
-      public void run() {
-        adapter.notifyDataSetChanged();
-      }
-    });
+        @Override
+        public void run() {
+          adapter.notifyDataSetChanged();
+        }
+      });
+    }
   }
 
   public void showProgress() {

@@ -1,27 +1,42 @@
 package me.veloc1.timetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import me.veloc1.timetracker.routing.Router;
 import me.veloc1.timetracker.routing.ScreenContainer;
 import me.veloc1.timetracker.screens.base.Screen;
+import me.veloc1.timetracker.ui.animations.VisibilityAnimation;
 
-public class MainActivity extends AppCompatActivity implements ScreenContainer {
+public class MainActivity
+    extends AppCompatActivity
+    implements ScreenContainer {
 
-  private Router    router;
-  private ViewGroup container;
+  private Router router;
+
+  private ViewGroup           container;
+  private VisibilityAnimation progressAnimation;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.e(getClass().getSimpleName(), "onCreate: ");
     setContentView(R.layout.activity_main);
     container = (ViewGroup) findViewById(R.id.container);
 
     router = new Router(this);
-    router.startMainScreen();
+
+    router.start(getIntent());
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    router.start(intent);
   }
 
   @Override

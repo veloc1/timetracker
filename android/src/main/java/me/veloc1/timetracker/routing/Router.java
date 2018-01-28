@@ -1,6 +1,13 @@
 package me.veloc1.timetracker.routing;
 
-import me.veloc1.timetracker.data.types.Log;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.content.Intent;
+import me.veloc1.timetracker.intenthandlers.IntentHandler;
+import me.veloc1.timetracker.intenthandlers.NoArgIntentHandler;
+import me.veloc1.timetracker.intenthandlers.StopTrackIntentHandler;
+import me.veloc1.timetracker.intenthandlers.TrackScreenIntentHandler;
 import me.veloc1.timetracker.screens.activities.ActivitiesScreen;
 import me.veloc1.timetracker.screens.add_activity.AddActivityScreen;
 import me.veloc1.timetracker.screens.base.Screen;
@@ -8,18 +15,31 @@ import me.veloc1.timetracker.screens.edit_activity.EditActivityScreen;
 import me.veloc1.timetracker.screens.main.MainScreen;
 import me.veloc1.timetracker.screens.track.TrackScreen;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class Router {
 
-  private ScreenContainer screenContainer;
-  private List<Screen>    history;
+  public static final String LOG_ID      = "log_id";
+  public static final String ACTIVITY_ID = "activity_id";
+
+  public static final String TO_STOP_LOG_ID = "log_id_to_stop";
+
+  private ScreenContainer     screenContainer;
+  private List<Screen>        history;
+  private List<IntentHandler> intentHandlers;
 
   public Router(ScreenContainer screenContainer) {
     this.screenContainer = screenContainer;
 
     history = new LinkedList<>();
+    createStarters();
+  }
+
+  public void start(Intent intent) {
+    clearHistory();
+    for (final IntentHandler intentHandler : intentHandlers) {
+      if (intentHandler.handle(this, intent)) {
+        break;
+      }
+    }
   }
 
   public void startMainScreen() {
@@ -38,12 +58,12 @@ public class Router {
     startScreen(new EditActivityScreen(activityId));
   }
 
-  public void startTrackScreen(int activityId) {
+  public void startNewTrackScreen(int activityId) {
     startScreen(new TrackScreen(activityId));
   }
 
-  public void startTrackScreen(Log log) {
-    startScreen(new TrackScreen(log));
+  public void startTrackScreen(int logId, int activityId) {
+    startScreen(new TrackScreen(logId, activityId));
   }
 
   private void startScreen(Screen screen) {
@@ -92,5 +112,17 @@ public class Router {
 
   public int getHistoryLength() {
     return history.size();
+  }
+
+  private void createStarters() {
+    intentHandlers = new LinkedList<>();
+
+    intentHandlers.add(new StopTrackIntentHandler());
+    intentHandlers.add(new TrackScreenIntentHandler());
+    intentHandlers.add(new NoArgIntentHandler());
+  }
+
+  private void clearHistory() {
+    history.clear();
   }
 }

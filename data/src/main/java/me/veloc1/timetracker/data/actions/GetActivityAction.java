@@ -1,15 +1,16 @@
 package me.veloc1.timetracker.data.actions;
 
+import javax.inject.Inject;
+
 import me.veloc1.timetracker.data.actions.base.Action;
 import me.veloc1.timetracker.data.repositories.ActivitiesRepository;
 import me.veloc1.timetracker.data.types.Activity;
 
-import javax.inject.Inject;
-
 public class GetActivityAction implements Action<Activity> {
   private final int activityId;
 
-  private Activity             result;
+  private Activity result;
+
   @Inject
   private ActivitiesRepository activitiesRepository;
 

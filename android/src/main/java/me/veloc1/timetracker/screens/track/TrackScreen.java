@@ -1,7 +1,6 @@
 package me.veloc1.timetracker.screens.track;
 
 import me.veloc1.timetracker.R;
-import me.veloc1.timetracker.data.types.Log;
 import me.veloc1.timetracker.screens.base.Screen;
 
 public class TrackScreen extends Screen<TrackPresenter, TrackView> {
@@ -9,8 +8,8 @@ public class TrackScreen extends Screen<TrackPresenter, TrackView> {
     super(new TrackPresenter(activityId));
   }
 
-  public TrackScreen(Log log) {
-    super(new TrackPresenter(log));
+  public TrackScreen(int logId, int activityId) {
+    super(new TrackPresenter(logId, activityId));
   }
 
   @Override

@@ -19,7 +19,9 @@ import me.veloc1.timetracker.notifications.NotificationController;
 
 public class NotificationService extends Service {
 
-  private Handler                uiHandler;
+  private Handler uiHandler;
+
+  @Inject
   private NotificationController notificationController;
 
   @Inject
@@ -27,8 +29,6 @@ public class NotificationService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    notificationController = new NotificationController(this);
-
     TimeTrackerApp.getApplication().inject(this);
 
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -58,7 +58,12 @@ public class NotificationService extends Service {
             notificationController.showNoLog();
           } else {
             long duration = timeProvider.getCurrentTimeInMillis() - currentLog.getStartDate();
-            notificationController.showLogDuration(currentActivity.getTitle(), duration);
+            notificationController
+                .showLogDuration(
+                    currentLog.getId(),
+                    currentLog.getActivityId(),
+                    currentActivity.getTitle(),
+                    duration);
           }
         }
       });

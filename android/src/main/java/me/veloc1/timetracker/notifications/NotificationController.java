@@ -8,14 +8,21 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import me.veloc1.timetracker.MainActivity;
 import me.veloc1.timetracker.R;
+import me.veloc1.timetracker.intenthandlers.NoArgIntentHandler;
+import me.veloc1.timetracker.intenthandlers.StopTrackIntentHandler;
+import me.veloc1.timetracker.intenthandlers.TrackScreenIntentHandler;
 
 public class NotificationController {
 
+  private static final int CODE_OPEN_APP   = 20001;
+  private static final int CODE_OPEN_TRACK = 20002;
+  private static final int CODE_STOP_TRACK = 20003;
+
   private final int notificationId = 1;
 
-  private final Context                    context;
+  private final Context context;
+
   private final NotificationManagerCompat  notificationManager;
   private final NotificationCompat.Builder notificationBuilder;
 
@@ -27,7 +34,7 @@ public class NotificationController {
     notificationBuilder = createNotification();
   }
 
-  public void showLogDuration(String activityTitle, long duration) {
+  public void showLogDuration(int logId, int activityId, String activityTitle, long duration) {
     int durationMinutes = (int) TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS);
     int durationHours   = (int) TimeUnit.HOURS.convert(duration, TimeUnit.MILLISECONDS);
 
@@ -71,12 +78,24 @@ public class NotificationController {
 
     notificationBuilder.mActions.clear();
 
-    Intent        openActivity = new Intent(context, MainActivity.class);
-    PendingIntent openIntent   = PendingIntent.getActivity(context, 0, openActivity, 0);
+    Intent openActivity = TrackScreenIntentHandler.createIntent(context, logId, activityId);
+    PendingIntent openIntent =
+        PendingIntent
+            .getActivity(
+                context,
+                CODE_OPEN_TRACK,
+                openActivity,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     notificationBuilder.addAction(0, context.getString(R.string.action_open), openIntent);
 
-    Intent        stopActivity = new Intent(context, MainActivity.class);
-    PendingIntent stopIntent   = PendingIntent.getActivity(context, 0, stopActivity, 0);
+    Intent stopActivity = StopTrackIntentHandler.createIntent(context, logId);
+    PendingIntent stopIntent =
+        PendingIntent
+            .getActivity(
+                context,
+                CODE_STOP_TRACK,
+                stopActivity,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     notificationBuilder.addAction(0, context.getString(R.string.action_stop), stopIntent);
 
     notificationManager.notify(notificationId, notificationBuilder.build());
@@ -111,12 +130,15 @@ public class NotificationController {
   }
 
   private void addIntent(NotificationCompat.Builder builder) {
-    Intent resultIntent = new Intent(context, MainActivity.class);
-    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                          Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    Intent resultIntent = NoArgIntentHandler.createIntent(context);
 
     PendingIntent resultPendingIntent =
-        PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent
+            .getActivity(
+                context,
+                CODE_OPEN_APP,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
     builder.setContentIntent(resultPendingIntent);
   }

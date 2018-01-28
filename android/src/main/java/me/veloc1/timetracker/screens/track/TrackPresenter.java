@@ -10,6 +10,7 @@ import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.ChangeLogStatusAction;
 import me.veloc1.timetracker.data.actions.CreateLogAction;
 import me.veloc1.timetracker.data.actions.GetActivityAction;
+import me.veloc1.timetracker.data.actions.GetLogAction;
 import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
 import me.veloc1.timetracker.data.types.Activity;
 import me.veloc1.timetracker.data.types.Log;
@@ -20,6 +21,7 @@ import me.veloc1.timetracker.screens.base.Presenter;
 public class TrackPresenter extends Presenter<TrackView> {
 
   private final int activityId;
+  private final int logId;
 
   private Log log;
 
@@ -39,15 +41,16 @@ public class TrackPresenter extends Presenter<TrackView> {
   public TrackPresenter(int activityId) {
     super();
     this.activityId = activityId;
+    this.logId = -1;
   }
 
   /**
    * This constructor uses already created {@link Log} object
    */
-  public TrackPresenter(Log log) {
+  public TrackPresenter(int logId, int activityId) {
     super();
-    activityId = log.getActivityId();
-    this.log = log;
+    this.activityId = activityId;
+    this.logId = logId;
   }
 
   @Override
@@ -55,8 +58,7 @@ public class TrackPresenter extends Presenter<TrackView> {
     super.onStart();
     executorService = Executors.newSingleThreadScheduledExecutor();
 
-    if (this.log == null) {
-      // should create log
+    if (this.log == null && this.logId < 0) {
       execute(new CreateLogAction("", activityId), new ActionSubscriber<Log>() {
 
         @Override
@@ -68,12 +70,26 @@ public class TrackPresenter extends Presenter<TrackView> {
 
         @Override
         public void onError(Throwable throwable) {
+          // TODO: 28.01.2018 handle error
           throwable.printStackTrace();
         }
       });
     } else {
-      scheduleRefresh();
-      refreshNotification(activityId, log);
+      execute(new GetLogAction(logId), new ActionSubscriber<Log>() {
+
+        @Override
+        public void onResult(Log log) {
+          TrackPresenter.this.log = log;
+          scheduleRefresh();
+          refreshNotification(activityId, log);
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+          // TODO: 28.01.2018 handle error
+          throwable.printStackTrace();
+        }
+      });
     }
   }
 
@@ -99,13 +115,15 @@ public class TrackPresenter extends Presenter<TrackView> {
             TimeUnit.SECONDS);
   }
 
-  private void refreshNotification(int activityId, final Log log) {
+  private void refreshNotification(final int activityId, final Log log) {
     execute(new GetActivityAction(activityId), new ActionSubscriber<Activity>() {
 
       @Override
       public void onResult(Activity activity) {
         notificationController
             .showLogDuration(
+                log.getId(),
+                activityId,
                 activity.getTitle(),
                 timeProvider.getCurrentTimeInMillis() - log.getStartDate());
       }
