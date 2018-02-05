@@ -13,6 +13,7 @@ import me.veloc1.timetracker.R;
 public class TrackView extends RelativeLayout implements View.OnClickListener {
   private TrackPresenter presenter;
   private TextView       duration;
+  private TextView       currentlyTracking;
 
   public TrackView(Context context) {
     super(context);
@@ -35,8 +36,14 @@ public class TrackView extends RelativeLayout implements View.OnClickListener {
   protected void onFinishInflate() {
     super.onFinishInflate();
 
+    currentlyTracking = (TextView) findViewById(R.id.currently_tracking);
     duration = (TextView) findViewById(R.id.duration);
     findViewById(R.id.done).setOnClickListener(this);
+  }
+
+  public void setCurrentlyTrackedActivity(String activityTitle) {
+    String text = getResources().getString(R.string.currently_tracking, activityTitle);
+    currentlyTracking.setText(text);
   }
 
   public void setTrackedTime(final String durationText) {

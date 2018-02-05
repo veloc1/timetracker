@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
+import me.veloc1.timetracker.IntendedException;
 import me.veloc1.timetracker.data.DurationFormatter;
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.ChangeLogStatusAction;
@@ -63,15 +64,13 @@ public class TrackPresenter extends Presenter<TrackView> {
 
         @Override
         public void onResult(Log log) {
-          TrackPresenter.this.log = log;
-          scheduleRefresh();
-          refreshNotification(activityId, log);
+          saveLog(log);
         }
 
         @Override
         public void onError(Throwable throwable) {
           // TODO: 28.01.2018 handle error
-          throwable.printStackTrace();
+          throw new IntendedException(throwable);
         }
       });
     } else {
@@ -79,15 +78,13 @@ public class TrackPresenter extends Presenter<TrackView> {
 
         @Override
         public void onResult(Log log) {
-          TrackPresenter.this.log = log;
-          scheduleRefresh();
-          refreshNotification(activityId, log);
+          saveLog(log);
         }
 
         @Override
         public void onError(Throwable throwable) {
           // TODO: 28.01.2018 handle error
-          throwable.printStackTrace();
+          throw new IntendedException(throwable);
         }
       });
     }
@@ -97,6 +94,25 @@ public class TrackPresenter extends Presenter<TrackView> {
   public void onStop() {
     super.onStop();
     executorService.shutdown();
+  }
+
+  private void saveLog(Log log) {
+    this.log = log;
+    scheduleRefresh();
+    refreshNotification(activityId, log);
+
+    execute(new GetActivityAction(activityId), new ActionSubscriber<Activity>() {
+
+      @Override
+      public void onResult(Activity activity) {
+        getView().setCurrentlyTrackedActivity(activity.getTitle());
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        throw new IntendedException(throwable);
+      }
+    });
   }
 
   private void scheduleRefresh() {
@@ -130,7 +146,7 @@ public class TrackPresenter extends Presenter<TrackView> {
 
       @Override
       public void onError(Throwable throwable) {
-
+        throw new IntendedException(throwable);
       }
     });
   }
@@ -152,7 +168,7 @@ public class TrackPresenter extends Presenter<TrackView> {
 
       @Override
       public void onError(Throwable throwable) {
-        throwable.printStackTrace();
+        throw new IntendedException(throwable);
       }
     });
   }

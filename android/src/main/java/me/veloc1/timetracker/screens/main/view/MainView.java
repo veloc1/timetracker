@@ -3,6 +3,7 @@ package me.veloc1.timetracker.screens.main.view;
 import java.util.List;
 
 import android.content.Context;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -56,6 +57,11 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
 
     list = (RecyclerView) findViewById(R.id.list);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+    /*list
+        .addItemDecoration(
+            new DividerItemDecoration(
+                getContext(),
+                DividerItemDecoration.VERTICAL));*/
 
     fab = findViewById(R.id.fab);
     fab.setOnClickListener(MainView.this);
@@ -113,6 +119,14 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
 
   public void hideError() {
     error.setVisibility(View.GONE);
+  }
+
+  public void showList() {
+    list.setVisibility(View.VISIBLE);
+  }
+
+  public void hideList() {
+    list.setVisibility(View.GONE);
   }
 
   public void showFirstRunTip() {
@@ -194,4 +208,5 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
   public void setPresenter(MainPresenter presenter) {
     this.presenter = presenter;
   }
+
 }

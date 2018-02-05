@@ -1,12 +1,12 @@
 package me.veloc1.timetracker.screens.activities;
 
+import java.util.List;
+
 import me.veloc1.timetracker.data.actions.GetAllActivitiesAction;
 import me.veloc1.timetracker.data.actions.RemoveActivityAction;
 import me.veloc1.timetracker.data.actions.base.ActionSubscriber;
 import me.veloc1.timetracker.data.types.Activity;
 import me.veloc1.timetracker.screens.base.Presenter;
-
-import java.util.List;
 
 public class ActivitiesPresenter
     extends Presenter<ActivitiesView>

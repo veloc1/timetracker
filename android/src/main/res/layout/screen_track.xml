@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <me.veloc1.timetracker.screens.track.TrackView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
+
+  <TextView
+      android:id="@+id/currently_tracking"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/textPrimary"
+      android:textSize="18sp"
+      tools:text="Currently tracking: some activity" />
 
   <TextView
       android:id="@+id/duration"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:textSize="24sp"
-      android:textColor="@color/textPrimary"/>
+      android:layout_below="@+id/currently_tracking"
+      android:textColor="@color/textSecondary"
+      android:textSize="18sp"
+      tools:text="00:24" />
 
   <android.support.v7.widget.AppCompatButton
       android:id="@+id/done"
-      android:layout_below="@+id/duration"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_below="@+id/duration"
+      android:layout_marginTop="24dp"
       android:text="@string/done"
-      android:layout_centerHorizontal="true"
-      android:textColor="@android:color/white"/>
+      android:textColor="@android:color/white" />
 
 </me.veloc1.timetracker.screens.track.TrackView>

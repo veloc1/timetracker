@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
+import me.veloc1.timetracker.IntendedException;
 import me.veloc1.timetracker.data.DurationFormatter;
 import me.veloc1.timetracker.data.TimeProvider;
 import me.veloc1.timetracker.data.actions.GetActivitiesUpdatedSinceDateAction;
@@ -66,11 +67,13 @@ public class MainPresenter extends Presenter<MainView> {
     getView().hideProgress();
     getView().hideError();
     getView().hideFirstRunTip();
+    getView().showList();
 
     getView().setItems(activities);
 
     if (activities.size() == 0) {
       getView().showFirstRunTip();
+      getView().hideList();
       getView().setActivitiesNameToAddActivity();
       shouldHandleActivitiesAsAddAction = true;
     } else {
@@ -202,7 +205,7 @@ public class MainPresenter extends Presenter<MainView> {
 
         @Override
         public void onError(Throwable throwable) {
-          throwable.printStackTrace();
+          throw new IntendedException(throwable);
         }
       });
     }
@@ -249,13 +252,21 @@ public class MainPresenter extends Presenter<MainView> {
                   return Float.valueOf(o2.getValue()).compareTo(o1.getValue());
                 }
               });
-              statistics = displayItems.subList(0, 5);
+              if (displayItems.size() > 5) {
+                statistics = displayItems.subList(0, 5);
+              } else {
+                // TODO: 05.02.2018 implement this method
+                // getView().hideStatistic();
+                // TODO: 05.02.2018 remove this call 
+                statistics = new ArrayList<>(displayItems);
+              }
             }
 
             @Override
             public void onError(Throwable throwable) {
               throwable.printStackTrace();
               isErrorInStatistic = true;
+              throw new IntendedException(throwable);
             }
           });
     }
@@ -264,6 +275,7 @@ public class MainPresenter extends Presenter<MainView> {
     public void onError(Throwable throwable) {
       throwable.printStackTrace();
       isErrorInStatistic = true;
+      throw new IntendedException(throwable);
     }
   }
 }

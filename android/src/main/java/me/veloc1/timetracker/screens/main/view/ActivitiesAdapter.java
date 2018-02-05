@@ -13,6 +13,7 @@ import me.veloc1.timetracker.screens.main.MainPresenter;
 public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   public static final int HEADER = 0;
   public static final int ITEM   = 1;
+  public static final int FOOTER = 2;
 
   private final List<Activity> activities;
   private final MainPresenter  presenter;
@@ -29,9 +30,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     if (viewType == HEADER) {
       View view = inflater.inflate(R.layout.item_header_main_statistic, parent, false);
       return new StatisticViewHolder(view, presenter);
-    } else {
+    } else if (viewType == ITEM) {
       View view = inflater.inflate(R.layout.item_main, parent, false);
       return new ActivityViewHolder(view, presenter);
+    } else {
+      View view = inflater.inflate(R.layout.item_footer_stub_main_statistic, parent, false);
+      return new FooterStubViewHolder(view);
     }
   }
 
@@ -39,7 +43,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (getItemViewType(position) == HEADER) {
       ((StatisticViewHolder) holder).bind();
-    } else {
+    } else if (getItemViewType(position) == ITEM) {
       ((ActivityViewHolder) holder).bind(activities.get(position - 1));
     }
   }
@@ -49,11 +53,14 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     if (position == 0) {
       return HEADER;
     }
+    if (position == getItemCount() - 1) {
+      return FOOTER;
+    }
     return ITEM;
   }
 
   @Override
   public int getItemCount() {
-    return activities.size() + 1;
+    return activities.size() + 2;
   }
 }

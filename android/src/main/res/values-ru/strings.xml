@@ -23,6 +23,7 @@
   <string name="edit_activity_tip">Здесь вы можете редактировать активности</string>
 
   <!-- TRACK -->
+  <string name="currently_tracking">Отслеживается: <b>%1$s</b>  </string>
   <string name="done">Завершить</string>
 
   <!-- NOTIFICATIONS -->

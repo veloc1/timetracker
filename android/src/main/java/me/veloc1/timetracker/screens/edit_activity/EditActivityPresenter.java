@@ -1,5 +1,6 @@
 package me.veloc1.timetracker.screens.edit_activity;
 
+import me.veloc1.timetracker.IntendedException;
 import me.veloc1.timetracker.data.actions.EditActivityAction;
 import me.veloc1.timetracker.data.actions.GetActivityAction;
 import me.veloc1.timetracker.data.actions.base.ActionSubscriber;

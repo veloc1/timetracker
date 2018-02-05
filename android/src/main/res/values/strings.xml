@@ -23,6 +23,7 @@
   <string name="edit_activity_tip">Here you can edit activity</string>
 
   <!-- TRACK -->
+  <string name="currently_tracking">Currently Tracking: <b>%1$s</b> </string>
   <string name="done">Done</string>
 
   <!-- NOTIFICATIONS -->
