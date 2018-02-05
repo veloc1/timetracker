@@ -32,7 +32,7 @@ public class NotificationService extends Service {
     TimeTrackerApp.getApplication().inject(this);
 
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(new RefreshStateRunnable(), 0, 60, TimeUnit.SECONDS);
+    executorService.scheduleAtFixedRate(new RefreshStateRunnable(), 0, 300, TimeUnit.SECONDS);
 
     return START_STICKY;
   }

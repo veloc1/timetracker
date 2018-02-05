@@ -9,7 +9,9 @@
   <!-- MAIN -->
   <string name="first_run_tip">Чтобы начать работать с приложением, нажмите на иконку \"Управление\" и перейдите в пункт \"Добавить активность\"</string>
   <string name="statistic_for_last_week">Статистика за неделю</string>
+  <string name="statistic_for_last_day">Статистика за день</string>
   <string name="statistic_error">Ошибка при загрузке статистики</string>
+  <string name="statistic_untracked_duration">Не отслежено</string>
   <string name="track">Отслеживать</string>
   <string name="activities">Активности</string>
   <string name="add_activity">Добавить активность</string>

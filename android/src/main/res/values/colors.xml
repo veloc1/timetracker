@@ -7,6 +7,7 @@
   <color name="progressBackground">#80000000</color>
   <color name="divider">#10000000</color>
   <color name="column">#FFDA97</color>
+  <color name="untracked">#ff003b</color>
 
   <color name="textPrimary">#111111</color>
   <color name="textSecondary">#333333</color>

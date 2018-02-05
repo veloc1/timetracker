@@ -3,7 +3,7 @@ package me.veloc1.timetracker.screens.main.view;
 import java.util.List;
 
 import android.content.Context;
-import android.support.v7.widget.DividerItemDecoration;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import me.veloc1.timetracker.R;
 import me.veloc1.timetracker.data.types.Activity;
+import me.veloc1.timetracker.screens.main.ActivityStatisticDisplayItem;
 import me.veloc1.timetracker.screens.main.MainPresenter;
 import me.veloc1.timetracker.ui.animations.FabMorphAnimation;
 import me.veloc1.timetracker.ui.animations.VisibilityAnimation;
@@ -100,6 +101,18 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
         @Override
         public void run() {
           adapter.notifyDataSetChanged();
+        }
+      });
+    }
+  }
+
+  public void refreshItem(final int position) {
+    if (getHandler() != null) {
+      getHandler().post(new Runnable() {
+
+        @Override
+        public void run() {
+          adapter.notifyItemChanged(position + 1); // position + header
         }
       });
     }
@@ -209,4 +222,12 @@ public class MainView extends RelativeLayout implements View.OnClickListener {
     this.presenter = presenter;
   }
 
+  public ActivityStatisticDisplayItem constructNotTrackedStatisticItem(long untrackedDuration) {
+    return
+        new ActivityStatisticDisplayItem(
+            -1,
+            getContext().getString(R.string.statistic_untracked_duration),
+            ContextCompat.getColor(getContext(), R.color.untracked),
+            untrackedDuration);
+  }
 }

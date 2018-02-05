@@ -9,7 +9,9 @@
   <!-- MAIN -->
   <string name="first_run_tip">To start tracking your time use \"Manage\" button, and then click \"Add activity\"</string>
   <string name="statistic_for_last_week">Statistic for last week</string>
+  <string name="statistic_for_last_day">Statistic for last day</string>
   <string name="statistic_error">Error while loading statistic</string>
+  <string name="statistic_untracked_duration">Untracked</string>
   <string name="track">Track</string>
   <string name="activities">Activities</string>
   <string name="add_activity">Add activity</string>

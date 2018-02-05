@@ -39,6 +39,7 @@ public class MainPresenter extends Presenter<MainView> {
   private DurationFormatter durationFormatter;
 
   private ScheduledExecutorService scheduledExecutorService;
+  private List<Activity>           activities;
 
   @Override
   public void onStart() {
@@ -50,7 +51,7 @@ public class MainPresenter extends Presenter<MainView> {
     isErrorInStatistic = false;
 
     long currentTime = timeProvider.getCurrentTimeInMillis();
-    long agoTime     = currentTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
+    long agoTime     = currentTime - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
     execute(new GetActivitiesUpdatedSinceDateAction(agoTime), new StatisticSubscriber());
   }
 
@@ -64,6 +65,7 @@ public class MainPresenter extends Presenter<MainView> {
   }
 
   private void showActivities(List<Activity> activities) {
+    this.activities = activities;
     getView().hideProgress();
     getView().hideError();
     getView().hideFirstRunTip();
@@ -154,8 +156,18 @@ public class MainPresenter extends Presenter<MainView> {
   }
 
   private void refreshCurrentItem() {
-    // TODO: 16.01.2018 refresh only current item
-    getView().refreshList();
+    if (currentLog != null) {
+      int index = -1;
+      for (int i = 0; i < activities.size(); i++) {
+        if (activities.get(i).getId() == currentLog.getActivityId()) {
+          index = i;
+          break;
+        }
+      }
+      if (index >= 0) {
+        getView().refreshItem(index);
+      }
+    }
   }
 
   @Override
@@ -252,14 +264,23 @@ public class MainPresenter extends Presenter<MainView> {
                   return Float.valueOf(o2.getValue()).compareTo(o1.getValue());
                 }
               });
+
               if (displayItems.size() > 5) {
                 statistics = displayItems.subList(0, 5);
               } else {
                 // TODO: 05.02.2018 implement this method
                 // getView().hideStatistic();
-                // TODO: 05.02.2018 remove this call 
+                // TODO: 05.02.2018 remove this call
                 statistics = new ArrayList<>(displayItems);
               }
+
+              long untrackedDuration = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
+              for (final ActivityStatisticDisplayItem item : displayItems) {
+                untrackedDuration -= item.getValue();
+              }
+              ActivityStatisticDisplayItem untrackedItem =
+                  getView().constructNotTrackedStatisticItem(untrackedDuration);
+              statistics.add(untrackedItem);
             }
 
             @Override
